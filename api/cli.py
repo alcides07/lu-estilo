@@ -13,13 +13,13 @@ def migrations(
     Exemplo: python cli.py migrations -m "add user table"
     """
     cmd = f"alembic revision --autogenerate -m '{message}'"
-    run(cmd, shell=True, check=True)
+    run(cmd, shell=True, check=True, capture_output=True)
 
 
 @app.command()
 def migrate():
     """Aplica todas as migrações pendentes."""
-    run("alembic upgrade head", shell=True, check=True)
+    run("alembic upgrade head", shell=True, check=True, capture_output=True)
 
 
 if __name__ == "__main__":
