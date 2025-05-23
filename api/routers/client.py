@@ -48,7 +48,13 @@ async def read(
 
 
 @router.post("/", status_code=201)
-async def create(client: ClientCreate, session: SessionDep) -> ClientRead:
+async def create(
+    client: ClientCreate,
+    session: SessionDep,
+    current_user: User = Depends(get_user_authenticated),
+) -> ClientRead:
+    await check_owner_permission(client.user_id, current_user)
+
     data = create_client(client, session)
     return data
 
