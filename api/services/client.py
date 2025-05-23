@@ -10,7 +10,7 @@ def check_cpf_exists(session: Session, cpf: str) -> None:
         raise HTTPException(400, "Já existe um cliente com esse CPF")
 
 
-def check_user_exists(session: Session, user_id: int) -> None:
+def check_user_client_exists(session: Session, user_id: int) -> None:
     """Verifica se já existe um cliente vinculado ao usuário fornecido"""
     if exists(session, Client, user_id=user_id):
         raise HTTPException(400, "Já existe um cliente associado a esse usuário")
