@@ -3,12 +3,17 @@ from api.models.client import Client
 from api.models.user import User
 from api.schemas.client import ClientCreate
 from api.orm.utils.get_object_or_404 import get_object_or_404
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from api.services.client import check_cpf_exists, check_user_client_exists
 from api.filters.client import ClientFilter
 from api.schemas.utils.pagination import PaginationSchema
 from api.orm.utils.filter_collection import filter_collection
+
+
+def read_client(session: SessionDep, client_id: int):
+    client = get_object_or_404(session, Client, client_id)
+    return client
 
 
 def list_clients(
@@ -35,4 +40,6 @@ def create_client(client: ClientCreate, session: SessionDep) -> Client:
         return db_client
 
     except SQLAlchemyError:
-        raise HTTPException(status_code=400, detail="Database error")  # ENVIAR PARA LOG
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, detail="Database error"
+        )  # ENVIAR PARA LOG
