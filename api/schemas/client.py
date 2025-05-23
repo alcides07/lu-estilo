@@ -11,3 +11,7 @@ class ClientRead(BaseModel):
 class ClientCreate(BaseModel):
     user_id: int = Field(description="Identificador do usuário")
     cpf: str = Field(max_length=11, description="CPF do cliente")
+
+
+class ClientUpdate(BaseModel):
+    cpf: str = Field(max_length=11, description="CPF do cliente")
