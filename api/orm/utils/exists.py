@@ -4,6 +4,8 @@ from sqlalchemy.sql import exists as sql_exists
 
 
 def exists(session: Session, model: type, **filters) -> bool:
+    """Verifica se existe algum registro do modelo informado com os filtros especificados"""
+
     stmt = sql_exists().where(
         *(getattr(model, field) == value for field, value in filters.items())
     )
