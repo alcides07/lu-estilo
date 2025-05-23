@@ -6,6 +6,21 @@ from api.orm.utils.get_object_or_404 import get_object_or_404
 from fastapi import HTTPException
 from sqlalchemy.exc import SQLAlchemyError
 from api.services.client import check_cpf_exists, check_user_client_exists
+from api.filters.client import ClientFilter
+from api.schemas.utils.pagination import PaginationSchema
+from api.orm.utils.filter_collection import filter_collection
+
+
+def list_clients(
+    session: SessionDep, pagination: PaginationSchema, filters: ClientFilter
+):
+    data = filter_collection(
+        session,
+        model=Client,
+        pagination=pagination,
+        filters=filters,
+    )
+    return data
 
 
 def create_client(client: ClientCreate, session: SessionDep) -> Client:
