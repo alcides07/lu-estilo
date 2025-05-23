@@ -8,12 +8,13 @@ from decouple import config as decouple_config
 from database.config import Base
 
 from models.user import User
+from models.client import Client
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
-DATABASE_URL = decouple_config("DATABASE_URL")
+DATABASE_URL = decouple_config("DATABASE_URL", default="sqlite:///database.db")
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 # Interpret the config file for Python logging.

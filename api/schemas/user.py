@@ -3,6 +3,7 @@ from datetime import datetime
 
 
 class UserRead(BaseModel):
+    id: int = Field(description="Identificador do usuário")
     name: str = Field(max_length=255, description="Nome do usuário")
     email: EmailStr = Field(max_length=255, description="E-mail do usuário")
     created_at: datetime = Field(description="Data de criação da conta do usuário")
