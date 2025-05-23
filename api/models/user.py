@@ -1,7 +1,9 @@
 from api.database.config import Base
-from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import String, event
+from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
 from datetime import datetime
+from api.orm.utils.exists import exists
+from fastapi import HTTPException, status
 
 
 class User(Base):
@@ -28,3 +30,45 @@ class User(Base):
 
     def __repr__(self) -> str:
         return f"{self.name} - {self.email}"
+
+
+def check_user_email_exists(session: Session, email: str) -> bool:
+    """Verifica se e-mail já está cadastrado"""
+    if exists(
+        session,
+        User,
+        email=email,
+    ):
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, "Já existe um usuário com esse e-mail"
+        )
+
+    return False
+
+
+def check_name_exists(session: Session, name: str) -> bool:
+    """Verifica se name já está cadastrado"""
+    if exists(
+        session,
+        User,
+        name=name,
+    ):
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, "Já existe um usuário com esse nome"
+        )
+
+    return False
+
+
+@event.listens_for(User, "before_insert")
+@event.listens_for(User, "before_update")
+def validate_user_email(mapper, connection, target):
+    session = Session.object_session(target) or Session(bind=connection)
+    check_user_email_exists(session, target.email)
+
+
+@event.listens_for(User, "before_insert")
+@event.listens_for(User, "before_update")
+def validate_user_name(mapper, connection, target):
+    session = Session.object_session(target) or Session(bind=connection)
+    check_name_exists(session, target.name)
