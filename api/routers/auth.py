@@ -39,7 +39,7 @@ async def login(
         data={"sub": user.name, "user_id": user.id}
     )
 
-    return LoginOut(access=access_token, refresh=refresh_token)
+    return LoginOut(access_token=access_token, refresh_token=refresh_token)
 
 
 @router.post("/refresh-token/")

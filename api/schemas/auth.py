@@ -9,8 +9,8 @@ class TokenType(str, Enum):
 
 
 class LoginOut(BaseModel):
-    access: str = Field(description="Token de acesso")
-    refresh: str = Field(description="Token de atualização")
+    access_token: str = Field(description="Token de acesso")
+    refresh_token: str = Field(description="Token de atualização")
 
 
 class TokenRefreshIn(BaseModel):
