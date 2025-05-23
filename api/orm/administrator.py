@@ -8,7 +8,6 @@ from api.orm.utils.get_object_or_404 import get_object_or_404
 from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from api.schemas.utils.pagination import PaginationSchema
-from api.services.administrator import check_user_administrator_exists
 
 
 def list_administrators(
@@ -26,11 +25,10 @@ def list_administrators(
 def create_administrator(
     administrator: AdministratorCreate, session: SessionDep
 ) -> Administrator:
-    db_administrator = Administrator(**administrator.model_dump())
     get_object_or_404(
         session, User, administrator.user_id, detail="Usuário não encontrado"
     )
-    check_user_administrator_exists(session, administrator.user_id)
+    db_administrator = Administrator(**administrator.model_dump())
 
     try:
         session.add(db_administrator)
