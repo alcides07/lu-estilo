@@ -1,7 +1,7 @@
 from api.models.user import User
 from api.orm.utils.exists import exists
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 
 
 def check_email_exists(session: Session, email: str) -> bool:
@@ -11,7 +11,9 @@ def check_email_exists(session: Session, email: str) -> bool:
         User,
         email=email,
     ):
-        raise HTTPException(400, "Já existe um usuário com esse e-mail")
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, "Já existe um usuário com esse e-mail"
+        )
 
     return False
 
@@ -23,6 +25,8 @@ def check_name_exists(session: Session, name: str) -> bool:
         User,
         name=name,
     ):
-        raise HTTPException(400, "Já existe um usuário com esse nome")
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, "Já existe um usuário com esse nome"
+        )
 
     return False

@@ -5,7 +5,7 @@ from api.models.user import User
 from api.orm.utils.filter_collection import filter_collection
 from api.schemas.administrator import AdministratorCreate
 from api.orm.utils.get_object_or_404 import get_object_or_404
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from api.schemas.utils.pagination import PaginationSchema
 from api.services.administrator import check_user_administrator_exists
@@ -38,4 +38,6 @@ def create_administrator(
         return db_administrator
 
     except SQLAlchemyError:
-        raise HTTPException(status_code=400, detail="Database error")  # ENVIAR PARA LOG
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, detail="Database error"
+        )  # ENVIAR PARA LOG
