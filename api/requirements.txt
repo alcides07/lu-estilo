@@ -3,3 +3,4 @@ SQLAlchemy==2.0.41
 python-decouple==3.8
 passlib[bcrypt]==1.7.4
 alembic==1.16.1
+validate-docbr==1.10.0
