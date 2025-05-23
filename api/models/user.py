@@ -21,5 +21,10 @@ class User(Base):
         cascade="all, delete-orphan",
     )
 
+    administrator: Mapped["Administrator"] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+
     def __repr__(self) -> str:
         return f"{self.name} - {self.email}"
