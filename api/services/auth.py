@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 from api.models.user import User
 from decouple import config
-from jwt.exceptions import InvalidTokenError
+from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict
 from api.schemas.auth import TokenStorage, TokenType
@@ -15,7 +15,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 5
 REFRESH_TOKEN_EXPIRE_DAYS = 1
 
-pwd_context = CryptContext(schemes=["bcrypt"])
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def authenticate_user(session: Session, credential: str, password: str):
@@ -50,6 +50,9 @@ async def verify_token(token: str, expected_token_type: TokenType) -> TokenStora
             raise credentials_exception
 
         return TokenStorage(**payload)
+
+    except ExpiredSignatureError:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Token expirado")
 
     except InvalidTokenError:
         raise credentials_exception

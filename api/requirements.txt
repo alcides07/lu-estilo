@@ -1,7 +1,8 @@
 fastapi[standard]==0.115.12 
 SQLAlchemy==2.0.41
 python-decouple==3.8
-passlib[bcrypt]==1.7.4
+passlib==1.7.4
+bcrypt==4.0.1
 alembic==1.16.1
 validate-docbr==1.10.0
 PyJWT==2.10.1
