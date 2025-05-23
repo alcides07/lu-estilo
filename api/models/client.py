@@ -1,7 +1,7 @@
 from api.database.config import Base
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from sqlalchemy import event
 from validate_docbr import CPF
 
@@ -31,4 +31,4 @@ class Client(Base):
 @event.listens_for(Client, "before_insert")
 def validate_client_cpf(mapper, connection, target):
     if not validate_cpf(target.cpf):
-        raise HTTPException(400, "CPF inválido")
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "CPF inválido")

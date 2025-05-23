@@ -1,5 +1,5 @@
 from typing import Optional, Type, TypeVar
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from api.dependencies.get_session_db import SessionDep
 from api.schemas.utils.pagination import PaginationSchema
 from sqlalchemy.orm import DeclarativeBase
@@ -38,7 +38,7 @@ def apply_nested_filter(stmt, model: Type[BaseModel], field_path: str, value: st
     for part in parts[:-1]:
         if not hasattr(current_model, part):
             raise HTTPException(
-                400,
+                status.HTTP_400_BAD_REQUEST,
                 f"Relacionamento '{part}' não encontrado em {current_model.__name__}",
             )
 
@@ -48,7 +48,8 @@ def apply_nested_filter(stmt, model: Type[BaseModel], field_path: str, value: st
     final_field = parts[-1]
     if not hasattr(current_model, final_field):
         raise HTTPException(
-            400, f"Campo '{final_field}' não encontrado em {current_model.__name__}"
+            status.HTTP_400_BAD_REQUEST,
+            f"Campo '{final_field}' não encontrado em {current_model.__name__}",
         )
 
     column = getattr(current_model, final_field)

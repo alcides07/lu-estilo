@@ -1,7 +1,7 @@
 from api.dependencies.get_session_db import SessionDep
 from api.models.user import User
 from api.schemas.user import UserCreate
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from api.services.auth import get_password_hash
 from api.services.user import check_email_exists, check_name_exists
@@ -20,4 +20,6 @@ def create_user(user: UserCreate, session: SessionDep) -> User:
         return db_user
 
     except SQLAlchemyError:
-        raise HTTPException(status_code=400, detail="Database error")  # ENVIAR PARA LOG
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, detail="Database error"
+        )  # ENVIAR PARA LOG

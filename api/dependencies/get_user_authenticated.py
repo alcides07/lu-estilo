@@ -1,18 +1,11 @@
 from sqlalchemy import select
 from api.dependencies.get_session_db import SessionDep
 from api.models.user import User
-from decouple import config
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
 from api.schemas.auth import TokenType
 from api.services.auth import verify_token
-
-
-SECRET_KEY = config("SECRET_KEY")
-ALGORITHM = "HS256"
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login/")
+from api.core.security.auth import oauth2_scheme
 
 
 async def get_user_authenticated(

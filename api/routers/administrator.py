@@ -3,7 +3,6 @@ from api.dependencies.get_session_db import SessionDep
 from api.filters.administrator import AdministratorFilter
 from api.orm.administrator import create_administrator, list_administrators
 from api.permissions.administrator import is_administrator
-from api.permissions.utils.permission_or import check_permissions_or
 from api.schemas.administrator import AdministratorCreate, AdministratorRead
 from api.dependencies.get_user_authenticated import get_user_authenticated
 from api.schemas.utils.pagination import PaginationSchema
@@ -20,7 +19,7 @@ router = APIRouter(
 @router.get(
     "/",
     status_code=200,
-    dependencies=[check_permissions_or(is_administrator)],
+    dependencies=[Depends(is_administrator)],
 )
 async def list(
     session: SessionDep,
