@@ -1,20 +1,15 @@
 from api.dependencies.get_session_db import SessionDep
 from api.models.user import User
 from api.schemas.user import UserCreate
-from passlib.context import CryptContext
 from fastapi import HTTPException
 from sqlalchemy.exc import SQLAlchemyError
-from api.services.user import check_email_exists
-
-pwd_context = CryptContext(schemes=["bcrypt"])
-
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
+from api.services.auth import get_password_hash
+from api.services.user import check_email_exists, check_name_exists
 
 
 def create_user(user: UserCreate, session: SessionDep) -> User:
     check_email_exists(session, user.email)
+    check_name_exists(session, user.name)
 
     user.password = get_password_hash(user.password)
     db_user = User(**user.model_dump(exclude=set(["passwordConfirmation"])))

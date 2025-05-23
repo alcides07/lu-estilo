@@ -1,10 +1,13 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.sql import exists as sql_exists
 
 
 def exists(session: Session, model: type, **filters) -> bool:
-    """Verifica se existe algum registro no modelo informado com os filtros especificados"""
-    query = select(model)
-    for field, value in filters.items():
-        query = query.where(getattr(model, field) == value)
-    return session.execute(query).scalar_one_or_none() is not None
+    """Verifica se existe algum registro do modelo informado com os filtros especificados"""
+
+    stmt = sql_exists().where(
+        *(getattr(model, field) == value for field, value in filters.items())
+    )
+    result = session.execute(select(stmt)).scalar()
+    return result if result is not None else False
