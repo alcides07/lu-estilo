@@ -8,7 +8,7 @@ class User(Base):
     __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(length=255), index=True)
+    name: Mapped[str] = mapped_column(String(length=255), unique=True, index=True)
     password: Mapped[str] = mapped_column(String(length=32))
     email: Mapped[str] = mapped_column(String(length=255), unique=True, index=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
