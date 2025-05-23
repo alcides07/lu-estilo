@@ -8,12 +8,14 @@ from decouple import config
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict
-from api.schemas.auth import TokenStorage, TokenType
+from api.schemas.auth import TokenDataToSubmitToStorage, TokenStorage, TokenType
+from api.core.security.auth import (
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    ALGORITHM,
+    REFRESH_TOKEN_EXPIRE_DAYS,
+)
 
 SECRET_KEY = config("SECRET_KEY")
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 5
-REFRESH_TOKEN_EXPIRE_DAYS = 1
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -59,20 +61,20 @@ async def verify_token(token: str, expected_token_type: TokenType) -> TokenStora
 
 
 def build_token_payload(
-    data: Dict[str, Any],
+    data: TokenDataToSubmitToStorage,
     expires_delta: timedelta,
     token_type: TokenType,
 ) -> Dict[str, Any]:
     expire = datetime.now(timezone.utc) + expires_delta
     payload = {
-        **data,
+        **data.model_dump(),
         "exp": expire,
         "token_type": token_type,
     }
     return payload
 
 
-async def create_access_token(data: dict[str, Any]):
+async def create_access_token(data: TokenDataToSubmitToStorage):
     payload = build_token_payload(
         data=data,
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
@@ -81,7 +83,7 @@ async def create_access_token(data: dict[str, Any]):
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
-async def create_refresh_token(data: dict[str, Any]) -> str:
+async def create_refresh_token(data: TokenDataToSubmitToStorage) -> str:
     payload = build_token_payload(
         data=data,
         expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
