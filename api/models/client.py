@@ -1,6 +1,16 @@
 from api.database.config import Base
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from fastapi import HTTPException
+from sqlalchemy import event
+from validate_docbr import CPF
+
+
+def validate_cpf(cpf: str) -> bool:
+    """Verifica se o CPF informado é válido"""
+
+    cpf_obj = CPF()
+    return cpf_obj.validate(cpf)
 
 
 class Client(Base):
@@ -16,3 +26,9 @@ class Client(Base):
 
     def __repr__(self) -> str:
         return f"{self.user.name} - {self.cpf}"
+
+
+@event.listens_for(Client, "before_insert")
+def validate_client_cpf(mapper, connection, target):
+    if not validate_cpf(target.cpf):
+        raise HTTPException(400, "CPF inválido")
