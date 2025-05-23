@@ -1,6 +1,8 @@
 from datetime import timedelta
+from typing import List
 from pydantic import BaseModel, Field
 from enum import Enum
+from api.schemas.role import Role
 
 
 class TokenType(str, Enum):
@@ -26,9 +28,18 @@ class TokenRefreshOut(BaseModel):
 
 
 class TokenStorage(BaseModel):
-    """Dados que são armazenados dentro do token JWT"""
+    """Dados que estão armazenados dentro do token JWT"""
 
     user_id: int = Field(description="Identificador do usuário")
     sub: str = Field(description="Nome do usuário")
     token_type: TokenType = Field(description="Tipo do token")
     exp: timedelta = Field(description="Tempo de expiração do token")
+    roles: List[Role]
+
+
+class TokenDataToSubmitToStorage(BaseModel):
+    """Dados utilizados como entrada para a geração de tokens JWT."""
+
+    user_id: int = Field(description="Identificador do usuário")
+    sub: str = Field(description="Nome do usuário")
+    roles: List[Role] = Field(description="Lista de papéis que o usuário possui")

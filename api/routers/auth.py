@@ -2,10 +2,16 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from api.dependencies.get_session_db import SessionDep
 from api.orm.user import create_user
-from api.schemas.auth import LoginOut, TokenRefreshOut, TokenType
+from api.schemas.auth import (
+    LoginOut,
+    TokenDataToSubmitToStorage,
+    TokenRefreshOut,
+    TokenType,
+)
 from fastapi.security import OAuth2PasswordRequestForm
 
 from api.schemas.user import UserCreate, UserRead
+from api.schemas.utils.get_roles_from_user import get_roles_from_user
 from api.services.auth import (
     authenticate_user,
     create_access_token,
@@ -31,13 +37,14 @@ async def login(
     session: SessionDep,
 ) -> LoginOut:
     user = authenticate_user(session, form_data.username, form_data.password)
-    access_token = await create_access_token(
-        data={"sub": user.name, "user_id": user.id}
+    data_token = TokenDataToSubmitToStorage(
+        sub=user.name,
+        user_id=user.id,
+        roles=get_roles_from_user(user),
     )
 
-    refresh_token = await create_refresh_token(
-        data={"sub": user.name, "user_id": user.id}
-    )
+    access_token = await create_access_token(data_token)
+    refresh_token = await create_refresh_token(data_token)
 
     return LoginOut(access_token=access_token, refresh_token=refresh_token)
 
