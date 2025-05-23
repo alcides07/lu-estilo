@@ -9,6 +9,7 @@ from database.config import Base
 
 from models.user import User
 from models.client import Client
+from models.administrator import Administrator
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
