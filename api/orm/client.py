@@ -28,8 +28,8 @@ def list_clients(
 
 
 def create_client(client: ClientCreate, session: SessionDep) -> Client:
-    db_client = Client(**client.model_dump())
     get_object_or_404(session, User, client.user_id, detail="Usuário não encontrado")
+    db_client = Client(**client.model_dump())
     check_user_client_exists(session, client.user_id)
 
     try:
