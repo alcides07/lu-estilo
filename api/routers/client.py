@@ -30,7 +30,6 @@ router = APIRouter(
 
 @router.get(
     "/",
-    status_code=200,
     dependencies=[Depends(is_administrator)],
 )
 async def list(
@@ -45,7 +44,6 @@ async def list(
 
 @router.get(
     "/{id}/",
-    status_code=200,
 )
 async def read(
     session: SessionDep,
@@ -69,7 +67,7 @@ async def create(
     return data
 
 
-@router.put("/{id}/", status_code=200)
+@router.put("/{id}/")
 async def update(
     client: ClientUpdate,
     session: SessionDep,
