@@ -1,0 +1,42 @@
+from fastapi import APIRouter, Depends
+from api.dependencies.get_user_authenticated import get_user_authenticated
+from api.dependencies.get_session_db import SessionDep
+from api.filters.category import CategoryFilter
+from api.permissions.administrator import is_administrator
+from api.schemas.category import CategoryCreate, CategoryRead
+from api.schemas.utils.pagination import PaginationSchema
+from api.schemas.utils.responses import ResponsePagination
+from api.services.category import CategoryService
+
+
+router = APIRouter(
+    prefix="/categories",
+    tags=["categories"],
+)
+
+
+@router.get(
+    "/",
+)
+async def list(
+    session: SessionDep,
+    pagination: PaginationSchema = Depends(),
+    filters: CategoryFilter = Depends(),
+) -> ResponsePagination[CategoryRead]:
+
+    service = CategoryService(session)
+    data = service.list_categories(pagination=pagination, filters=filters)
+    return ResponsePagination(data=data)
+
+
+@router.post(
+    "/",
+    status_code=201,
+    dependencies=[Depends(is_administrator), Depends(get_user_authenticated)],
+)
+async def create(
+    category: CategoryCreate,
+    session: SessionDep,
+) -> CategoryRead:
+    service = CategoryService(session)
+    return service.create_category(category=category)

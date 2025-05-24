@@ -20,7 +20,6 @@ router = APIRouter(
 
 @router.get(
     "/",
-    status_code=200,
     dependencies=[Depends(is_administrator)],
 )
 async def list(
