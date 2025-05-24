@@ -7,9 +7,7 @@ class Base(DeclarativeBase):
     pass
 
 
-DATABASE_URL: str = config("DATABASE_URL", default="sqlite:///database.db")
+DATABASE_URL: str = config("DATABASE_URL")
 
-connect_args = {"check_same_thread": False}
-
-engine = create_engine(DATABASE_URL, connect_args=connect_args)
+engine = create_engine(DATABASE_URL)
 Session = sessionmaker(engine)
