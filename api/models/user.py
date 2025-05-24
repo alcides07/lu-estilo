@@ -1,8 +1,8 @@
-from api.database.config import Base
+from database.config import Base
 from sqlalchemy import String, event
 from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
 from datetime import datetime
-from api.orm.utils.exists import exists
+from orm.utils.exists import exists
 from fastapi import HTTPException, status
 
 
@@ -11,7 +11,7 @@ class User(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(length=255), unique=True, index=True)
-    password: Mapped[str] = mapped_column(String(length=32))
+    password: Mapped[str] = mapped_column(String(length=255))
     email: Mapped[str] = mapped_column(String(length=255), unique=True, index=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(
