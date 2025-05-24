@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from api.routers import all_routers
 from contextlib import asynccontextmanager
-from api.database.config import Base, engine
+from routers import all_routers
+from database.config import Base, engine
 
 
 @asynccontextmanager

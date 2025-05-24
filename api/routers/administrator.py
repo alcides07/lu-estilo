@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends
-from api.dependencies.get_session_db import SessionDep
-from api.filters.administrator import AdministratorFilter
-from api.models.user import User
-from api.orm.administrator import create_administrator, list_administrators
-from api.permissions.administrator import is_administrator
-from api.permissions.utils.check_owner_permission import check_ower_user_permission
-from api.schemas.administrator import AdministratorCreate, AdministratorRead
-from api.dependencies.get_user_authenticated import get_user_authenticated
-from api.schemas.utils.pagination import PaginationSchema
-from api.schemas.utils.responses import ResponsePagination
+from dependencies.get_session_db import SessionDep
+from filters.administrator import AdministratorFilter
+from models.user import User
+from orm.administrator import create_administrator, list_administrators
+from permissions.administrator import is_administrator
+from permissions.utils.check_owner_permission import check_ower_user_permission
+from schemas.administrator import AdministratorCreate, AdministratorRead
+from dependencies.get_user_authenticated import get_user_authenticated
+from schemas.utils.pagination import PaginationSchema
+from schemas.utils.responses import ResponsePagination
 
 
 router = APIRouter(

@@ -1,7 +1,7 @@
 from typing import Optional, Type, TypeVar
 from fastapi import HTTPException, status
-from api.dependencies.get_session_db import SessionDep
-from api.schemas.utils.pagination import PaginationSchema
+from dependencies.get_session_db import SessionDep
+from schemas.utils.pagination import PaginationSchema
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import select, String
 from sqlalchemy.sql.expression import cast

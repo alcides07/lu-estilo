@@ -1,12 +1,12 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-from api.filters.product import ProductFilter
-from api.models.product import Product
-from api.orm.utils.get_object_or_404 import get_object_or_404
-from api.orm.utils.filter_collection import filter_collection
-from api.schemas.product import ProductCreate
-from api.schemas.utils.pagination import PaginationSchema
-from api.services.category import CategoryService
+from filters.product import ProductFilter
+from models.product import Product
+from orm.utils.get_object_or_404 import get_object_or_404
+from orm.utils.filter_collection import filter_collection
+from schemas.product import ProductCreate
+from schemas.utils.pagination import PaginationSchema
+from services.category import CategoryService
 from sqlalchemy.exc import SQLAlchemyError
 
 

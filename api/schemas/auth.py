@@ -2,7 +2,7 @@ from datetime import timedelta
 from typing import List
 from pydantic import BaseModel, Field
 from enum import Enum
-from api.schemas.role import Role
+from schemas.role import Role
 
 
 class TokenType(str, Enum):

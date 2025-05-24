@@ -1,13 +1,13 @@
-from api.dependencies.get_session_db import SessionDep
-from api.models.client import Client, check_user_client_exists
-from api.models.user import User
-from api.schemas.client import ClientCreate, ClientUpdate
-from api.orm.utils.get_object_or_404 import get_object_or_404
+from dependencies.get_session_db import SessionDep
+from models.client import Client, check_user_client_exists
+from models.user import User
+from schemas.client import ClientCreate, ClientUpdate
+from orm.utils.get_object_or_404 import get_object_or_404
 from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
-from api.filters.client import ClientFilter
-from api.schemas.utils.pagination import PaginationSchema
-from api.orm.utils.filter_collection import filter_collection
+from filters.client import ClientFilter
+from schemas.utils.pagination import PaginationSchema
+from orm.utils.filter_collection import filter_collection
 
 
 def read_client(session: SessionDep, client_id: int):

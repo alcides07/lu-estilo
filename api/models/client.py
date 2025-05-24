@@ -1,10 +1,12 @@
-from api.database.config import Base
+from typing import List
+from models.user import User
+from database.config import Base
 from sqlalchemy import ForeignKey, String, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
 from fastapi import HTTPException, status
 from sqlalchemy import event
 from validate_docbr import CPF
-from api.orm.utils.exists import exists
+from orm.utils.exists import exists
 
 
 class Client(Base):
@@ -16,9 +18,10 @@ class Client(Base):
         ForeignKey("user.id", ondelete="CASCADE"),
         unique=True,
     )
-    user: Mapped["User"] = relationship(
+    user: Mapped[User] = relationship(
         back_populates="client", single_parent=True, cascade="all, delete"
     )
+    orders: Mapped[List["Order"]] = relationship(back_populates="client")
 
     def __repr__(self) -> str:
         return f"{self.user.name} - {self.cpf}"

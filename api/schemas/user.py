@@ -14,5 +14,5 @@ class UserRead(BaseModel):
 
 class UserCreate(BaseModel):
     name: str = Field(max_length=255, description="Nome do usuário")
-    password: str = Field(max_length=32, description="Senha do usuário")
+    password: str = Field(max_length=255, description="Senha do usuário")
     email: EmailStr = Field(max_length=255, description="E-mail do usuário")

@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, Path, Response, status
-from api.dependencies.get_user_authenticated import get_user_authenticated
-from api.dependencies.get_session_db import SessionDep
-from api.filters.product import ProductFilter
-from api.permissions.administrator import is_administrator
-from api.schemas.product import ProductCreate, ProductRead, ProductUpdate
-from api.schemas.utils.pagination import PaginationSchema
-from api.schemas.utils.responses import ResponsePagination, ResponseUnit
-from api.services.product import ProductService
+from dependencies.get_user_authenticated import get_user_authenticated
+from dependencies.get_session_db import SessionDep
+from filters.product import ProductFilter
+from permissions.administrator import is_administrator
+from schemas.product import ProductCreate, ProductRead, ProductUpdate
+from schemas.utils.pagination import PaginationSchema
+from schemas.utils.responses import ResponsePagination, ResponseUnit
+from services.product import ProductService
 
 
 router = APIRouter(

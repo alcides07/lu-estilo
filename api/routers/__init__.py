@@ -1,8 +1,8 @@
-from .client import router as client_router
-from .administrator import router as administrator_router
-from .auth import router as auth_router
-from .product import router as product_router
-from .category import router as category_router
+from routers.client import router as client_router
+from routers.administrator import router as administrator_router
+from routers.auth import router as auth_router
+from routers.product import router as product_router
+from routers.category import router as category_router
 
 all_routers = [
     client_router,

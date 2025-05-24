@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends
-from api.dependencies.get_user_authenticated import get_user_authenticated
-from api.dependencies.get_session_db import SessionDep
-from api.filters.category import CategoryFilter
-from api.permissions.administrator import is_administrator
-from api.schemas.category import CategoryCreate, CategoryRead
-from api.schemas.utils.pagination import PaginationSchema
-from api.schemas.utils.responses import ResponsePagination
-from api.services.category import CategoryService
+from dependencies.get_user_authenticated import get_user_authenticated
+from dependencies.get_session_db import SessionDep
+from filters.category import CategoryFilter
+from permissions.administrator import is_administrator
+from schemas.category import CategoryCreate, CategoryRead
+from schemas.utils.pagination import PaginationSchema
+from schemas.utils.responses import ResponsePagination
+from services.category import CategoryService
 
 
 router = APIRouter(

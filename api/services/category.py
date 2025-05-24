@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
-from api.filters.category import CategoryFilter
-from api.models.category import Category
-from api.orm.utils.filter_collection import filter_collection
-from api.orm.utils.get_object_or_404 import get_object_or_404
-from api.schemas.category import CategoryCreate
-from api.schemas.utils.pagination import PaginationSchema
+from filters.category import CategoryFilter
+from models.category import Category
+from orm.utils.filter_collection import filter_collection
+from orm.utils.get_object_or_404 import get_object_or_404
+from schemas.category import CategoryCreate
+from schemas.utils.pagination import PaginationSchema
 
 
 class CategoryService:

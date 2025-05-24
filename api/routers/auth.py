@@ -1,8 +1,8 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends
-from api.dependencies.get_session_db import SessionDep
-from api.orm.user import create_user
-from api.schemas.auth import (
+from dependencies.get_session_db import SessionDep
+from orm.user import create_user
+from schemas.auth import (
     LoginOut,
     TokenDataToSubmitToStorage,
     TokenRefreshOut,
@@ -10,9 +10,9 @@ from api.schemas.auth import (
 )
 from fastapi.security import OAuth2PasswordRequestForm
 
-from api.schemas.user import UserCreate, UserRead
-from api.schemas.utils.get_roles_from_user import get_roles_from_user
-from api.services.auth import (
+from schemas.user import UserCreate, UserRead
+from schemas.utils.get_roles_from_user import get_roles_from_user
+from services.auth import (
     authenticate_user,
     create_access_token,
     create_refresh_token,

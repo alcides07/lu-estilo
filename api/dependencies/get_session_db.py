@@ -1,4 +1,4 @@
-from ..database.config import Session
+from database.config import Session
 from typing import Annotated
 from fastapi import Depends
 
