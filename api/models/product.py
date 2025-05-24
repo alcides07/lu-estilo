@@ -1,5 +1,5 @@
 from typing import Optional
-from database.config import Base
+from api.database.config import Base
 from sqlalchemy import ForeignKey, String, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import DECIMAL
