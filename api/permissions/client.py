@@ -7,5 +7,5 @@ from api.schemas.role import Role
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login/")
 
 
-def is_client(token: Annotated[str, Depends(oauth2_scheme)]) -> bool:
-    return has_role(token, Role.CLIENT)
+async def is_client(token: Annotated[str, Depends(oauth2_scheme)]) -> bool:
+    return await has_role(token, Role.CLIENT)
