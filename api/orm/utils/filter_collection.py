@@ -18,7 +18,6 @@ def filter_collection(
 ):
     """Main function to filter and paginate a collection"""
     stmt = select(model)
-
     stmt = apply_filters(stmt, model, filters)
     stmt = apply_pagination(stmt, pagination)
 
@@ -59,19 +58,52 @@ def apply_nested_filter(stmt, model: Type[BaseModel], field_path: str, value: st
     return stmt.where(column.ilike(f"%{value}%"))
 
 
+def apply_comparison_filters(stmt, model: Type[BaseModel], attr: str, value):
+    """Aplica filtros de comparação (lte, gte, lt, gt, eq, ne)"""
+    parts = attr.split("__")
+    field_name = parts[0]
+    operator = parts[1]
+
+    if not hasattr(model, field_name):
+        return stmt
+
+    column = getattr(model, field_name)
+
+    operators = {
+        "lte": column <= value,
+        "gte": column >= value,
+        "lt": column < value,
+        "gt": column > value,
+        "eq": column == value,
+        "ne": column != value,
+    }
+
+    if operator in operators:
+        return stmt.where(operators[operator])
+
+    return stmt
+
+
 def apply_filters(stmt, model: Type[BaseModel], filters: Optional[T] = None):
     """Apply filter conditions to the query"""
     if not filters:
         return stmt
+
+    COMPARISON_OPERATORS = {"lte", "gte", "lt", "gt", "eq", "ne"}
 
     for attr, value in filters.__dict__.items():
         if value is None:
             continue
 
         if "__" in attr:  # Filtro aninhado
-            stmt = apply_nested_filter(stmt, model, attr, value)
+            parts = attr.split("__")
+            operator = parts[1] if len(parts) > 1 else None
+            if operator in COMPARISON_OPERATORS:  # Operadores de comparação
+                stmt = apply_comparison_filters(stmt, model, attr, value)
+            else:  # Submodelos
+                stmt = apply_nested_filter(stmt, model, attr, value)
 
-        else:  # Filtro comum
+        else:  # Filtro comum (atributo simples)
             if hasattr(model, attr):
                 column = getattr(model, attr)
                 if not isinstance(column.type, String):
