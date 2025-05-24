@@ -16,7 +16,9 @@ class Client(Base):
         ForeignKey("user.id", ondelete="CASCADE"),
         unique=True,
     )
-    user: Mapped["User"] = relationship(back_populates="client", single_parent=True)
+    user: Mapped["User"] = relationship(
+        back_populates="client", single_parent=True, cascade="all, delete"
+    )
 
     def __repr__(self) -> str:
         return f"{self.user.name} - {self.cpf}"
