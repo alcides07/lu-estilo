@@ -1,8 +1,8 @@
 from fastapi import HTTPException, status
-from api.schemas.role import Role
-from api.schemas.auth import TokenType
+from schemas.role import Role
+from schemas.auth import TokenType
 from decouple import config
-from api.services.auth import verify_token
+from services.auth import verify_token
 
 SECRET_KEY = config("SECRET_KEY")
 

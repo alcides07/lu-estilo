@@ -1,13 +1,13 @@
-from api.dependencies.get_session_db import SessionDep
-from api.filters.administrator import AdministratorFilter
-from api.models.administrator import Administrator
-from api.models.user import User
-from api.orm.utils.filter_collection import filter_collection
-from api.schemas.administrator import AdministratorCreate
-from api.orm.utils.get_object_or_404 import get_object_or_404
+from dependencies.get_session_db import SessionDep
+from filters.administrator import AdministratorFilter
+from models.administrator import Administrator
+from models.user import User
+from orm.utils.filter_collection import filter_collection
+from schemas.administrator import AdministratorCreate
+from orm.utils.get_object_or_404 import get_object_or_404
 from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
-from api.schemas.utils.pagination import PaginationSchema
+from schemas.utils.pagination import PaginationSchema
 
 
 def list_administrators(

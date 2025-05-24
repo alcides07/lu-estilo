@@ -1,8 +1,8 @@
 from typing import Annotated
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-from api.permissions.utils.has_role import has_role
-from api.schemas.role import Role
+from permissions.utils.has_role import has_role
+from schemas.role import Role
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login/")
 

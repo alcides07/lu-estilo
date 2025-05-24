@@ -3,13 +3,13 @@ from fastapi import HTTPException, status
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from api.models.user import User
+from models.user import User
 from decouple import config
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict
-from api.schemas.auth import TokenDataToSubmitToStorage, TokenStorage, TokenType
-from api.core.security.auth import (
+from schemas.auth import TokenDataToSubmitToStorage, TokenStorage, TokenType
+from core.security.auth import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     ALGORITHM,
     REFRESH_TOKEN_EXPIRE_DAYS,

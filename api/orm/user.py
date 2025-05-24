@@ -1,9 +1,9 @@
-from api.dependencies.get_session_db import SessionDep
-from api.models.user import User
-from api.schemas.user import UserCreate
+from dependencies.get_session_db import SessionDep
+from models.user import User
+from schemas.user import UserCreate
 from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
-from api.services.auth import get_password_hash
+from services.auth import get_password_hash
 
 
 def create_user(user: UserCreate, session: SessionDep) -> User:

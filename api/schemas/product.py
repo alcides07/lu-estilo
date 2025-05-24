@@ -2,7 +2,7 @@ from datetime import date
 from decimal import Decimal
 from typing import Optional
 from pydantic import BaseModel, Field, field_validator
-from api.schemas.category import CategoryRead
+from schemas.category import CategoryRead
 
 
 class ProductBase(BaseModel):

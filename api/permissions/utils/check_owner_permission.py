@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status
-from api.dependencies.get_user_authenticated import get_user_authenticated
-from api.models.client import Client
-from api.models.user import User
+from dependencies.get_user_authenticated import get_user_authenticated
+from models.client import Client
+from models.user import User
 
 
 async def check_ower_user_permission(

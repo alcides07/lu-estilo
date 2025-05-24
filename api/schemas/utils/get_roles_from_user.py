@@ -1,6 +1,6 @@
 from typing import List
-from api.models.user import User
-from api.schemas.role import Role
+from models.user import User
+from schemas.role import Role
 
 
 def get_roles_from_user(user: User):

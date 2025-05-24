@@ -1,8 +1,8 @@
-from api.database.config import Base
+from database.config import Base
 from fastapi import HTTPException, status
 from sqlalchemy import ForeignKey, event
 from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
-from api.orm.utils.exists import exists
+from orm.utils.exists import exists
 
 
 class Administrator(Base):

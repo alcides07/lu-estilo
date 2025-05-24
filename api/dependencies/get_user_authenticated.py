@@ -1,11 +1,11 @@
 from sqlalchemy import select
-from api.dependencies.get_session_db import SessionDep
-from api.models.user import User
+from dependencies.get_session_db import SessionDep
+from models.user import User
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
-from api.schemas.auth import TokenType
-from api.services.auth import verify_token
-from api.core.security.auth import oauth2_scheme
+from schemas.auth import TokenType
+from services.auth import verify_token
+from core.security.auth import oauth2_scheme
 
 
 async def get_user_authenticated(
