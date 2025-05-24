@@ -60,3 +60,18 @@ def update_client(client: ClientUpdate, id: int, session: SessionDep) -> Client:
         raise HTTPException(
             status.HTTP_400_BAD_REQUEST, detail="Database error"
         )  # ENVIAR PARA LOG
+
+
+async def delete_client(client_id: int, session: SessionDep):
+    client = get_object_or_404(
+        session, Client, client_id, detail="Cliente não encontrado"
+    )
+
+    try:
+        session.delete(client)
+        session.commit()
+
+    except SQLAlchemyError:
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, detail="Database error"
+        )  # ENVIAR PARA LOG
