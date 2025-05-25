@@ -1,8 +1,18 @@
+include .env
+.PHONY: migrations 
+
 DOCKER_COMPOSE := docker-compose -f docker-compose.yml
 DOCKER_COMPOSE_DEV := docker-compose -f docker-compose-dev.yml
 PYTEST := docker exec -it lu-api-dev pytest
 ALEMBIC := docker exec -it lu-api-dev alembic
-BASH := docker exec -it lu-api-dev /bin/bash
+API_BASH_DEV := docker exec -it lu-api-dev /bin/bash
+DB_BASH_DEV := docker exec -it lu-db-dev /bin/bash
+
+psql-dev:
+	@$(DB_BASH_DEV) -c "psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)"
+
+migrations:
+	@${ALEMBIC} revision --autogenerate -m "${m}"
 
 migrate:
 	@${ALEMBIC} upgrade head
@@ -19,7 +29,6 @@ down:
 full:
 	@${DOCKER_COMPOSE} build
 	@${DOCKER_COMPOSE} up
-	@${ALEMBIC} upgrade head
 
 test: 
 	@${PYTEST}
@@ -39,7 +48,6 @@ down-dev:
 full-dev:
 	@${DOCKER_COMPOSE_DEV} build
 	@${DOCKER_COMPOSE_DEV} up
-	@${ALEMBIC} upgrade head
 
 test-dev: 
 	@${PYTEST}
