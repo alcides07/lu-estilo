@@ -1,4 +1,7 @@
 from fastapi import APIRouter, Depends, Path, Response, status
+from permissions.utils.client_owner_or_admin import owner_permission_or_admin
+from permissions.user import check_ower_user_permission
+from permissions.client import check_owner_client_permission
 from services.client import ClientService
 from dependencies.get_user_authenticated import get_user_authenticated
 from dependencies.get_session_db import SessionDep
@@ -6,10 +9,6 @@ from filters.client import ClientFilter
 from models.client import Client
 from models.user import User
 from permissions.administrator import is_administrator
-from permissions.utils.check_owner_permission import (
-    check_owner_client_permission,
-    check_ower_user_permission,
-)
 from schemas.client import ClientCreate, ClientRead, ClientUpdate
 from schemas.utils.pagination import PaginationSchema
 from schemas.utils.responses import ResponsePagination, ResponseUnit
@@ -33,8 +32,8 @@ async def list(
 ) -> ResponsePagination[ClientRead]:
 
     service = ClientService(session)
-    data = service.list_clients(pagination=pagination, filters=filters)
-    return ResponsePagination(data=data)
+    data, metadata = service.list_clients(pagination=pagination, filters=filters)
+    return ResponsePagination(data=data, metadata=metadata)
 
 
 @router.get(
@@ -55,10 +54,8 @@ async def read(
 async def create(
     client: ClientCreate,
     session: SessionDep,
-    current_user: User = Depends(get_user_authenticated),
+    _: User = Depends(owner_permission_or_admin(check_ower_user_permission)),
 ) -> ClientRead:
-    await check_ower_user_permission(client.user_id, current_user)
-
     service = ClientService(session)
     return service.create_client(client)
 
