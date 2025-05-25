@@ -1,8 +1,10 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from datetime import datetime
 
 
 class UserRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int = Field(description="Identificador do usuário")
     name: str = Field(max_length=255, description="Nome do usuário")
     email: EmailStr = Field(max_length=255, description="E-mail do usuário")

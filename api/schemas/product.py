@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
 from typing import Optional
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from schemas.category import CategoryRead
 
 
@@ -25,6 +25,8 @@ class ProductBase(BaseModel):
 
 
 class ProductRead(ProductBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int = Field(description="Identificador do produto")
     category: Optional[CategoryRead] = Field(
         description="Categoria a qual o produto pertence", default=None
