@@ -1,16 +1,10 @@
 from fastapi import APIRouter, Depends, Path, Response, status
+from services.client import ClientService
 from dependencies.get_user_authenticated import get_user_authenticated
 from dependencies.get_session_db import SessionDep
 from filters.client import ClientFilter
 from models.client import Client
 from models.user import User
-from orm.client import (
-    create_client,
-    list_clients,
-    read_client,
-    update_client,
-    delete_client,
-)
 from permissions.administrator import is_administrator
 from permissions.utils.check_owner_permission import (
     check_owner_client_permission,
@@ -38,7 +32,8 @@ async def list(
     filters: ClientFilter = Depends(),
 ) -> ResponsePagination[ClientRead]:
 
-    data = list_clients(session=session, pagination=pagination, filters=filters)
+    service = ClientService(session)
+    data = service.list_clients(pagination=pagination, filters=filters)
     return ResponsePagination(data=data)
 
 
@@ -51,7 +46,8 @@ async def read(
     _: Client = Depends(check_owner_client_permission),
 ) -> ResponseUnit[ClientRead]:
 
-    data = read_client(session=session, client_id=id)
+    service = ClientService(session)
+    data = await service.read_client(id)
     return ResponseUnit(data=data)
 
 
@@ -63,8 +59,8 @@ async def create(
 ) -> ClientRead:
     await check_ower_user_permission(client.user_id, current_user)
 
-    data = create_client(client, session)
-    return data
+    service = ClientService(session)
+    return service.create_client(client)
 
 
 @router.put("/{id}/")
@@ -74,7 +70,8 @@ async def update(
     id: int = Path(description="Identificador do cliente"),
     _: Client = Depends(check_owner_client_permission),
 ) -> ClientRead:
-    data = update_client(client, id, session)
+    service = ClientService(session)
+    data = service.update_client(client, id)
     return data
 
 
@@ -84,5 +81,6 @@ async def delete(
     id: int = Path(description="Identificador do cliente"),
     _: Client = Depends(check_owner_client_permission),
 ):
-    await delete_client(id, session)
+    service = ClientService(session)
+    await service.delete_client(id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

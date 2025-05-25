@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
+from services.administrator import AdministratorService
 from dependencies.get_session_db import SessionDep
 from filters.administrator import AdministratorFilter
 from models.user import User
-from orm.administrator import create_administrator, list_administrators
 from permissions.administrator import is_administrator
 from permissions.utils.check_owner_permission import check_ower_user_permission
 from schemas.administrator import AdministratorCreate, AdministratorRead
@@ -28,7 +28,8 @@ async def list(
     filters: AdministratorFilter = Depends(),
 ) -> ResponsePagination[AdministratorRead]:
 
-    data = list_administrators(session=session, pagination=pagination, filters=filters)
+    service = AdministratorService(session)
+    data = service.list_administrators(pagination=pagination, filters=filters)
     return ResponsePagination(data=data)
 
 
@@ -38,8 +39,7 @@ async def create(
     session: SessionDep,
     current_user: User = Depends(get_user_authenticated),
 ):
-
     await check_ower_user_permission(administrator.user_id, current_user)
 
-    data = create_administrator(administrator, session)
-    return data
+    service = AdministratorService(session)
+    return service.create_administrator(administrator)

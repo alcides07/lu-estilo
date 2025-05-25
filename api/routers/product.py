@@ -36,7 +36,7 @@ async def read(
 ) -> ResponseUnit[ProductRead]:
 
     service = ProductService(session)
-    data = service.read_product(id)
+    data = await service.read_product(id)
     return ResponseUnit(data=data)
 
 
