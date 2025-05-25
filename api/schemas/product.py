@@ -21,7 +21,9 @@ class ProductBase(BaseModel):
         description="Estoque do produto",
         ge=0,
     )
-    expiration_date: date = Field(description="Data de validade do produto")
+    expiration_date: Optional[date] = Field(
+        description="Data de validade do produto", default=None
+    )
 
 
 class ProductRead(ProductBase):
