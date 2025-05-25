@@ -1,5 +1,6 @@
 from enum import Enum
 from fastapi import Query
+from pydantic import BaseModel, Field
 
 
 class LimitPagination(int, Enum):
@@ -22,3 +23,9 @@ class PaginationSchema:
     ):
         self.limit = limit
         self.offset = offset
+
+
+class MetadataPagination(BaseModel):
+    count: int = Field(
+        description="Quantidade de registros da tabela em questão existentes no banco"
+    )

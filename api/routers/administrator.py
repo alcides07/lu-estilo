@@ -4,7 +4,7 @@ from dependencies.get_session_db import SessionDep
 from filters.administrator import AdministratorFilter
 from models.user import User
 from permissions.administrator import is_administrator
-from permissions.utils.check_owner_permission import check_ower_user_permission
+from permissions.user import check_ower_user_permission
 from schemas.administrator import AdministratorCreate, AdministratorRead
 from dependencies.get_user_authenticated import get_user_authenticated
 from schemas.utils.pagination import PaginationSchema
@@ -29,8 +29,8 @@ async def list(
 ) -> ResponsePagination[AdministratorRead]:
 
     service = AdministratorService(session)
-    data = service.list_administrators(pagination=pagination, filters=filters)
-    return ResponsePagination(data=data)
+    data, metadata = service.list_administrators(pagination=pagination, filters=filters)
+    return ResponsePagination(data=data, metadata=metadata)
 
 
 @router.post("/", response_model=AdministratorRead, status_code=201)

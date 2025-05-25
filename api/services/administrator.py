@@ -17,13 +17,13 @@ class AdministratorService:
     def list_administrators(
         self, pagination: PaginationSchema, filters: AdministratorFilter
     ):
-        data = filter_collection(
+        data, metadata = filter_collection(
             self.session,
             model=Administrator,
             pagination=pagination,
             filters=filters,
         )
-        return data
+        return data, metadata
 
     def create_administrator(self, administrator: AdministratorCreate) -> Administrator:
         get_object_or_404(

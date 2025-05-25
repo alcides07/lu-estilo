@@ -19,13 +19,13 @@ class ClientService:
         return client
 
     def list_clients(self, pagination: PaginationSchema, filters: ClientFilter):
-        data = filter_collection(
+        data, metadata = filter_collection(
             self.session,
             model=Client,
             pagination=pagination,
             filters=filters,
         )
-        return data
+        return data, metadata
 
     def create_client(self, client: ClientCreate) -> Client:
         get_object_or_404(
