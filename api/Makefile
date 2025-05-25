@@ -2,6 +2,7 @@ DOCKER_COMPOSE := docker-compose -f docker-compose.yml
 DOCKER_COMPOSE_DEV := docker-compose -f docker-compose-dev.yml
 PYTEST := docker exec -it lu-api-dev pytest
 ALEMBIC := docker exec -it lu-api-dev alembic
+BASH := docker exec -it lu-api-dev /bin/bash
 
 migrate:
 	@${ALEMBIC} upgrade head
@@ -22,6 +23,9 @@ full:
 
 test: 
 	@${PYTEST}
+
+bash-dev:
+	@${BASH} 
 
 build-dev:
 	@${DOCKER_COMPOSE_DEV} build
