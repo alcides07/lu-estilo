@@ -30,7 +30,7 @@ class ProductService:
         if new_stock < 0:
             raise HTTPException(
                 status.HTTP_400_BAD_REQUEST,
-                f"O produto {product.description} possui apenas {product.stock} unidades em estoque",
+                f"O produto {product.description} possui {product.stock} unidades em estoque",
             )
 
         return new_stock
@@ -40,13 +40,13 @@ class ProductService:
         return product
 
     def list_products(self, pagination: PaginationSchema, filters: ProductFilter):
-        data = filter_collection(
+        data, metadata = filter_collection(
             self.session,
             model=Product,
             pagination=pagination,
             filters=filters,
         )
-        return data
+        return data, metadata
 
     async def list_products_by_ids(self, product_ids: list[int]) -> list[Product]:
         if not product_ids:
