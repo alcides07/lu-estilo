@@ -1,15 +1,21 @@
 from decimal import Decimal
-from typing import List
+from typing import List, Tuple
+from uuid import UUID
 from fastapi import HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import Date, cast, desc, select
 from sqlalchemy.orm import Session
+from models.product import Product
+from filters.order import OrderFilter
+from schemas.utils.pagination import MetadataPagination, PaginationSchema
+from orm.utils.count_collection import count_collection
+from orm.utils.get_object_or_404 import get_object_or_404
 from schemas.product import ProductRead
 from schemas.order_product import OrderProductRead, ProductOfOrder
 from models.order_product import OrderProduct
 from models.order import Order
 from services.product import ProductService
 from models.user import User
-from schemas.order import OrderCreate, OrderRead, OrderStatus
+from schemas.order import OrderCreate, OrderRead, OrderStatus, OrderUpdate
 from sqlalchemy.exc import SQLAlchemyError
 
 
@@ -17,10 +23,32 @@ class OrderService:
     def __init__(self, session: Session):
         self.session = session
 
-    async def list_orders(self) -> list[OrderProductRead]:
+    @staticmethod
+    def apply_filters_orders(stmt, filters: OrderFilter):
+        if filters.date__lte is not None:
+            stmt = stmt.where(cast(Order.date, Date) <= filters.date__lte)
 
-        stmt = select(Order)
-        orders = self.session.execute(stmt).scalars().all()
+        if filters.date__gte is not None:
+            stmt = stmt.where(cast(Order.date, Date) >= filters.date__gte)
+
+        if filters.status is not None:
+            stmt = stmt.where(Order.status == filters.status)
+
+        if filters.client_id is not None:
+            stmt = stmt.where(Order.client_id == filters.client_id)
+
+        if filters.category_id is not None:
+            stmt = (
+                stmt.join(Order.products)
+                .join(OrderProduct.product)
+                .where(Product.category_id == filters.category_id)
+            )
+
+        return stmt
+
+    async def get_products_of_order(
+        self, orders: List[Order]
+    ) -> Tuple[list[OrderProductRead], MetadataPagination]:
         response: List[OrderProductRead] = []
         for order in orders:
             products_list = [
@@ -38,7 +66,30 @@ class OrderService:
             )
             response.append(order_response)
 
-        return response
+        total_count = count_collection(self.session, Order)
+        metadata = MetadataPagination(count=total_count)
+
+        return response, metadata
+
+    async def read_order(self, order_id: UUID) -> OrderProductRead:
+        order = get_object_or_404(
+            self.session, Order, order_id, detail="Pedido não encontrado"
+        )
+        result, _ = await self.get_products_of_order([order])
+        return result[0]
+
+    async def list_orders(
+        self, pagination: PaginationSchema, filters: OrderFilter
+    ) -> Tuple[list[OrderProductRead], MetadataPagination]:
+        stmt = select(Order).order_by(desc(Order.date))
+
+        stmt = OrderService.apply_filters_orders(stmt, filters)
+        stmt = stmt.offset(pagination.offset).limit(pagination.limit)
+
+        orders = self.session.execute(stmt).scalars().all()
+
+        result, metadata = await self.get_products_of_order(orders)
+        return result, metadata
 
     async def create_order(self, order: OrderCreate, user: User):
         product_ids = [p.id for p in order.products]
@@ -102,34 +153,33 @@ class OrderService:
                 status.HTTP_400_BAD_REQUEST, detail="Database error"
             )  # ENVIAR PARA LOG
 
-    # def update_product(self, id, data):
-    #     db_product = get_object_or_404(
-    #         self.session, Product, id, detail="Produto não encontrado"
-    #     )
+    async def update_order(self, id, data: OrderUpdate) -> Order:
+        db_order = get_object_or_404(
+            self.session, Order, id, detail="Pedido não encontrado"
+        )
 
-    #     for key, value in data:
-    #         if value != None and hasattr(db_product, key):
-    #             setattr(db_product, key, value)
+        db_order.status = data.status
 
-    #     try:
-    #         self.session.commit()
-    #         self.session.refresh(db_product)
+        try:
+            self.session.commit()
+            self.session.refresh(db_order)
 
-    #         return db_product
+            return db_order
 
-    #     except SQLAlchemyError:
-    #         raise HTTPException(
-    #             status.HTTP_400_BAD_REQUEST, detail="Database error"
-    #         )  # ENVIAR PARA LOG
+        except SQLAlchemyError:
+            raise HTTPException(
+                status.HTTP_400_BAD_REQUEST, detail="Database error"
+            )  # ENVIAR PARA LOG
 
-    # async def delete_product(self, id):
-    #     product = get_object_or_404(self.session, Product, id)
+    async def delete_order(self, id):
+        order = get_object_or_404(self.session, Order, id)
 
-    #     try:
-    #         self.session.delete(product)
-    #         self.session.commit()
+        try:
+            self.session.delete(order)
+            self.session.commit()
 
-    #     except SQLAlchemyError:
-    #         raise HTTPException(
-    #             status.HTTP_400_BAD_REQUEST, detail="Database error"
-    #         )  # ENVIAR PARA LOG
+        except SQLAlchemyError:
+            self.session.rollback()
+            raise HTTPException(
+                status.HTTP_400_BAD_REQUEST, detail="Database error"
+            )  # ENVIAR PARA LOG
