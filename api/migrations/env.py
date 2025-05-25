@@ -10,9 +10,9 @@ from database.config import Base
 from models.user import User
 from models.client import Client
 from models.administrator import Administrator
-
 from models.category import Category
 from models.product import Product
+from models.order import Order
 
 
 # this is the Alembic Config object, which provides

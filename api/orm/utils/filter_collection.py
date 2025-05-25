@@ -1,7 +1,8 @@
 from typing import Optional, Type, TypeVar
 from fastapi import HTTPException, status
+from orm.utils.count_collection import count_collection
 from dependencies.get_session_db import SessionDep
-from schemas.utils.pagination import PaginationSchema
+from schemas.utils.pagination import MetadataPagination, PaginationSchema
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import select, String
 from sqlalchemy.sql.expression import cast
@@ -18,12 +19,15 @@ def filter_collection(
 ):
     """Main function to filter and paginate a collection"""
     stmt = select(model)
+    total_count = count_collection(session, model)
+
     stmt = apply_filters(stmt, model, filters)
     stmt = apply_pagination(stmt, pagination)
 
     data = session.execute(stmt).scalars().all()
+    metadata = MetadataPagination(count=total_count)
 
-    return data
+    return data, metadata
 
 
 def apply_nested_filter(stmt, model: Type[BaseModel], field_path: str, value: str):

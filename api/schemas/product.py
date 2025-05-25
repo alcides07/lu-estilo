@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
 from typing import Optional
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from schemas.category import CategoryRead
 
 
@@ -21,10 +21,14 @@ class ProductBase(BaseModel):
         description="Estoque do produto",
         ge=0,
     )
-    expiration_date: date = Field(description="Data de validade do produto")
+    expiration_date: Optional[date] = Field(
+        description="Data de validade do produto", default=None
+    )
 
 
 class ProductRead(ProductBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int = Field(description="Identificador do produto")
     category: Optional[CategoryRead] = Field(
         description="Categoria a qual o produto pertence", default=None

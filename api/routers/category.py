@@ -25,8 +25,8 @@ async def list(
 ) -> ResponsePagination[CategoryRead]:
 
     service = CategoryService(session)
-    data = service.list_categories(pagination=pagination, filters=filters)
-    return ResponsePagination(data=data)
+    data, metadata = service.list_categories(pagination=pagination, filters=filters)
+    return ResponsePagination(data=data, metadata=metadata)
 
 
 @router.post(

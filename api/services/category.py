@@ -18,13 +18,13 @@ class CategoryService:
         )
 
     def list_categories(self, pagination: PaginationSchema, filters: CategoryFilter):
-        data = filter_collection(
+        data, metadata = filter_collection(
             self.session,
             model=Category,
             pagination=pagination,
             filters=filters,
         )
-        return data
+        return data, metadata
 
     def create_category(self, category: CategoryCreate):
         new_category = Category(**category.model_dump())

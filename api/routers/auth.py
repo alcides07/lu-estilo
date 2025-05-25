@@ -1,7 +1,7 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends
+from services.user import UserService
 from dependencies.get_session_db import SessionDep
-from orm.user import create_user
 from schemas.auth import (
     LoginOut,
     TokenDataToSubmitToStorage,
@@ -25,10 +25,11 @@ router = APIRouter(
 )
 
 
-@router.post("/register/", response_model=UserRead, status_code=201)
-async def create(user: UserCreate, session: SessionDep):
-    data = create_user(user, session)
-    return data
+@router.post("/register/", status_code=201)
+async def create(user: UserCreate, session: SessionDep) -> UserRead:
+
+    service = UserService(session)
+    return service.create_user(user)
 
 
 @router.post("/login/")

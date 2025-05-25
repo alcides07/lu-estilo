@@ -8,24 +8,65 @@ from schemas.product import ProductCreate
 from schemas.utils.pagination import PaginationSchema
 from services.category import CategoryService
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import select
 
 
 class ProductService:
     def __init__(self, session: Session):
         self.session = session
 
-    def read_product(self, id):
+    @staticmethod
+    def return_product_new_stock(product: Product, qtty_remove_stock: int) -> int:
+        new_stock = product.stock - qtty_remove_stock
+
+        return new_stock
+
+    @staticmethod
+    def validate_and_return_product_new_stock(
+        product: Product, qtty_remove_stock: int
+    ) -> int:
+        new_stock = ProductService.return_product_new_stock(product, qtty_remove_stock)
+
+        if new_stock < 0:
+            raise HTTPException(
+                status.HTTP_400_BAD_REQUEST,
+                f"O produto {product.description} possui {product.stock} unidades em estoque",
+            )
+
+        return new_stock
+
+    async def read_product(self, id):
         product = get_object_or_404(self.session, Product, id)
         return product
 
     def list_products(self, pagination: PaginationSchema, filters: ProductFilter):
-        data = filter_collection(
+        data, metadata = filter_collection(
             self.session,
             model=Product,
             pagination=pagination,
             filters=filters,
         )
-        return data
+        return data, metadata
+
+    async def list_products_by_ids(self, product_ids: list[int]) -> list[Product]:
+        if not product_ids:
+            return []
+
+        stmt = select(Product).where(Product.id.in_(product_ids)).with_for_update()
+
+        result = self.session.execute(stmt)
+        products = result.scalars().all()
+
+        found_ids = {p.id for p in products}
+        missing_ids = set(product_ids) - found_ids
+
+        if missing_ids:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Alguns produtos não foram encontrados: {', '.join(map(str, missing_ids))}",
+            )
+
+        return products
 
     def create_product(self, product: ProductCreate):
         if product.category_id is not None:

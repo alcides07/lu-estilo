@@ -1,21 +1,14 @@
 from fastapi import APIRouter, Depends, Path, Response, status
+from permissions.utils.client_owner_or_admin import owner_permission_or_admin
+from permissions.user import check_ower_user_permission
+from permissions.client import check_owner_client_permission
+from services.client import ClientService
 from dependencies.get_user_authenticated import get_user_authenticated
 from dependencies.get_session_db import SessionDep
 from filters.client import ClientFilter
 from models.client import Client
 from models.user import User
-from orm.client import (
-    create_client,
-    list_clients,
-    read_client,
-    update_client,
-    delete_client,
-)
 from permissions.administrator import is_administrator
-from permissions.utils.check_owner_permission import (
-    check_owner_client_permission,
-    check_ower_user_permission,
-)
 from schemas.client import ClientCreate, ClientRead, ClientUpdate
 from schemas.utils.pagination import PaginationSchema
 from schemas.utils.responses import ResponsePagination, ResponseUnit
@@ -38,8 +31,9 @@ async def list(
     filters: ClientFilter = Depends(),
 ) -> ResponsePagination[ClientRead]:
 
-    data = list_clients(session=session, pagination=pagination, filters=filters)
-    return ResponsePagination(data=data)
+    service = ClientService(session)
+    data, metadata = service.list_clients(pagination=pagination, filters=filters)
+    return ResponsePagination(data=data, metadata=metadata)
 
 
 @router.get(
@@ -51,7 +45,8 @@ async def read(
     _: Client = Depends(check_owner_client_permission),
 ) -> ResponseUnit[ClientRead]:
 
-    data = read_client(session=session, client_id=id)
+    service = ClientService(session)
+    data = await service.read_client(id)
     return ResponseUnit(data=data)
 
 
@@ -59,12 +54,10 @@ async def read(
 async def create(
     client: ClientCreate,
     session: SessionDep,
-    current_user: User = Depends(get_user_authenticated),
+    _: User = Depends(owner_permission_or_admin(check_ower_user_permission)),
 ) -> ClientRead:
-    await check_ower_user_permission(client.user_id, current_user)
-
-    data = create_client(client, session)
-    return data
+    service = ClientService(session)
+    return service.create_client(client)
 
 
 @router.put("/{id}/")
@@ -74,7 +67,8 @@ async def update(
     id: int = Path(description="Identificador do cliente"),
     _: Client = Depends(check_owner_client_permission),
 ) -> ClientRead:
-    data = update_client(client, id, session)
+    service = ClientService(session)
+    data = service.update_client(client, id)
     return data
 
 
@@ -84,5 +78,6 @@ async def delete(
     id: int = Path(description="Identificador do cliente"),
     _: Client = Depends(check_owner_client_permission),
 ):
-    await delete_client(id, session)
+    service = ClientService(session)
+    await service.delete_client(id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

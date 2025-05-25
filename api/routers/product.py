@@ -23,8 +23,8 @@ async def list(
 ) -> ResponsePagination[ProductRead]:
 
     service = ProductService(session)
-    data = service.list_products(pagination=pagination, filters=filters)
-    return ResponsePagination(data=data)
+    data, metadata = service.list_products(pagination=pagination, filters=filters)
+    return ResponsePagination(data=data, metadata=metadata)
 
 
 @router.get(
@@ -36,7 +36,7 @@ async def read(
 ) -> ResponseUnit[ProductRead]:
 
     service = ProductService(session)
-    data = service.read_product(id)
+    data = await service.read_product(id)
     return ResponseUnit(data=data)
 
 

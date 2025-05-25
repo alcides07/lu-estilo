@@ -1,5 +1,6 @@
-from typing import Optional
-from api.database.config import Base
+from typing import Optional, List
+from models.order_product import OrderProduct
+from database.config import Base
 from sqlalchemy import ForeignKey, String, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import DECIMAL
@@ -20,6 +21,7 @@ class Product(Base):
         ForeignKey("category.id", ondelete="SET NULL"), index=True
     )
     category: Mapped[Optional["Category"]] = relationship(back_populates="products")
+    orders: Mapped[List[OrderProduct]] = relationship(back_populates="product")
 
     def __repr__(self) -> str:
         return self.description
