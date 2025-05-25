@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey
+from sqlalchemy import UUID, ForeignKey
 from database.config import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from decimal import Decimal
@@ -8,8 +8,9 @@ from sqlalchemy.types import DECIMAL
 class OrderProduct(Base):
     __tablename__ = "order_product"
 
-    order_id: Mapped[int] = mapped_column(
-        ForeignKey("order.id", ondelete="RESTRICT"),
+    order_id: Mapped[str] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("order.id", ondelete="CASCADE"),
         primary_key=True,
     )
     product_id: Mapped[int] = mapped_column(
