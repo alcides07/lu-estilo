@@ -18,7 +18,9 @@ class Order(Base):
         ForeignKey("client.id", ondelete="SET NULL"), index=True
     )
     client: Mapped[Optional[Client]] = relationship(back_populates="orders")
-    products: Mapped[List["OrderProduct"]] = relationship(back_populates="order")
+    products: Mapped[List["OrderProduct"]] = relationship(
+        back_populates="order", passive_deletes=True
+    )
     price_total: Mapped[Decimal] = mapped_column(DECIMAL(10, 2))
 
     def __repr__(self) -> str:
