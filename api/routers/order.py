@@ -3,9 +3,6 @@ from uuid import UUID
 from models.client import Client
 from permissions.order import check_owner_order_permission
 from filters.order import OrderFilter
-from permissions.utils.client_owner_or_admin import (
-    owner_permission_or_admin,
-)
 from permissions.administrator import is_administrator
 from schemas.order_product import OrderProductRead
 from permissions.client import is_client
@@ -75,7 +72,7 @@ async def list(
 async def read(
     session: SessionDep,
     id: UUID = Path(description="Identificador do pedido"),
-    _: Client = Depends(owner_permission_or_admin(check_owner_order_permission)),
+    _: Client = Depends(check_owner_order_permission),
 ) -> ResponseUnit[OrderProductRead]:
     service = OrderService(session)
     order = await service.read_order(id)
