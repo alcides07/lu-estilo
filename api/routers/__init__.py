@@ -4,12 +4,14 @@ from routers.auth import router as auth_router
 from routers.product import router as product_router
 from routers.category import router as category_router
 from routers.order import router as order_router
+from routers.openapi import router as openapi_router
 
 all_routers = [
-    client_router,
     administrator_router,
     auth_router,
-    product_router,
     category_router,
+    client_router,
+    product_router,
     order_router,
+    openapi_router,
 ]
