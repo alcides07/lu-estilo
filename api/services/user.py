@@ -20,6 +20,4 @@ class UserService:
             return db_user
 
         except SQLAlchemyError:
-            raise HTTPException(
-                status.HTTP_400_BAD_REQUEST, detail="Database error"
-            )  # ENVIAR PARA LOG
+            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)

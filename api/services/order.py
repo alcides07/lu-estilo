@@ -158,9 +158,7 @@ class OrderService:
 
         except SQLAlchemyError:
             self.session.rollback()
-            raise HTTPException(
-                status.HTTP_400_BAD_REQUEST, detail="Database error"
-            )  # ENVIAR PARA LOG
+            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     async def update_order(self, id, data: OrderUpdate) -> Order:
         db_order = get_object_or_404(
@@ -176,9 +174,7 @@ class OrderService:
             return db_order
 
         except SQLAlchemyError:
-            raise HTTPException(
-                status.HTTP_400_BAD_REQUEST, detail="Database error"
-            )  # ENVIAR PARA LOG
+            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     async def delete_order(self, id):
         order = get_object_or_404(self.session, Order, id)
@@ -189,6 +185,4 @@ class OrderService:
 
         except SQLAlchemyError:
             self.session.rollback()
-            raise HTTPException(
-                status.HTTP_400_BAD_REQUEST, detail="Database error"
-            )  # ENVIAR PARA LOG
+            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)

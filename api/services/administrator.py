@@ -37,6 +37,4 @@ class AdministratorService:
             return db_administrator
 
         except SQLAlchemyError:
-            raise HTTPException(
-                status.HTTP_400_BAD_REQUEST, detail="Database error"
-            )  # ENVIAR PARA LOG
+            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)

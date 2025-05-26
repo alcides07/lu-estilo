@@ -42,9 +42,7 @@ class ClientService:
             return db_client
 
         except SQLAlchemyError:
-            raise HTTPException(
-                status.HTTP_400_BAD_REQUEST, detail="Database error"
-            )  # ENVIAR PARA LOG
+            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update_client(self, client: ClientUpdate, id: int) -> Client:
         db_client = get_object_or_404(
@@ -62,9 +60,7 @@ class ClientService:
             return db_client
 
         except SQLAlchemyError:
-            raise HTTPException(
-                status.HTTP_400_BAD_REQUEST, detail="Database error"
-            )  # ENVIAR PARA LOG
+            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     async def delete_client(self, client_id: int):
         client = get_object_or_404(
@@ -76,6 +72,4 @@ class ClientService:
             self.session.commit()
 
         except SQLAlchemyError:
-            raise HTTPException(
-                status.HTTP_400_BAD_REQUEST, detail="Database error"
-            )  # ENVIAR PARA LOG
+            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)

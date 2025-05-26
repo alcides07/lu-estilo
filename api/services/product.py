@@ -83,9 +83,7 @@ class ProductService:
             self.session.refresh(new_product)
 
         except SQLAlchemyError:
-            raise HTTPException(
-                status.HTTP_400_BAD_REQUEST, detail="Database error"
-            )  # ENVIAR PARA LOG
+            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return new_product
 
@@ -105,9 +103,7 @@ class ProductService:
             return db_product
 
         except SQLAlchemyError:
-            raise HTTPException(
-                status.HTTP_400_BAD_REQUEST, detail="Database error"
-            )  # ENVIAR PARA LOG
+            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     async def delete_product(self, id):
         product = get_object_or_404(self.session, Product, id)
@@ -127,6 +123,4 @@ class ProductService:
             self.session.commit()
 
         except SQLAlchemyError:
-            raise HTTPException(
-                status.HTTP_400_BAD_REQUEST, detail="Database error"
-            )  # ENVIAR PARA LOG
+            raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR)
