@@ -34,7 +34,7 @@ test:
 	@${PYTEST}
 
 bash-dev:
-	@${BASH} 
+	@${API_BASH_DEV} 
 
 build-dev:
 	@${DOCKER_COMPOSE_DEV} build
@@ -49,5 +49,3 @@ full-dev:
 	@${DOCKER_COMPOSE_DEV} build
 	@${DOCKER_COMPOSE_DEV} up
 
-test-dev: 
-	@${PYTEST}

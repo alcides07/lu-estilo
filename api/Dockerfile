@@ -26,5 +26,6 @@ COPY --from=builder /root/.local /root/.local
 COPY --from=builder /app /app
 
 ENV PATH=/root/.local/bin:$PATH
+ENV PYTHONPATH=/app
 
 WORKDIR /app
