@@ -4,7 +4,7 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-@router.get("/docs", include_in_schema=False)
+@router.get("/docs/", include_in_schema=False)
 def overridden_swagger():
     return get_swagger_ui_html(
         openapi_url="/openapi.json",
@@ -20,7 +20,7 @@ def overridden_swagger():
     )
 
 
-@router.get("/redoc", include_in_schema=False)
+@router.get("/redoc/", include_in_schema=False)
 def overridden_redoc():
     return get_redoc_html(
         openapi_url="/openapi.json",
