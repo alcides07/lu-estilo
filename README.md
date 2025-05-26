@@ -3,7 +3,9 @@
     <h4>API da Lu Estilo 🕶️🔥 </h4>
     <div>
       <a href="#configuracao-ambiente">Configuração do ambiente</a> •
-      <a href="#testes">Execução dos testes</a> 
+      <a href="#testes">Testes</a> •
+      <a href="#sentry">Ferramenta Sentry</a> • 
+      <a href="#deploy">Deploy</a> 
     </div>
   </section>
 
@@ -71,7 +73,7 @@ http://localhost:8000/auth/register/
 </details>
 
 <details>
-<summary><h3>Execução com Make (Makefile) </h3></summary>
+<summary><h3>Execução com Make (Makefile) (opcional) </h3></summary>
 
 > A utilização do Make nesse caso serve apenas para simplificar o processo de execução. Nos bastidores, quem realiza a tarefa é o docker-compose.
 
@@ -90,3 +92,15 @@ Os testes foram desenvolvidos utilizando as ferramentas `pytest`, `factory-boy` 
 Você pode executar os testes utilizando qualquer um dos seguintes comandos:
 
 `docker exec -it lu-api-dev pytest` | `make test`
+
+## <div id="sentry"> ⛯ Ferramenta Sentry </div>
+
+> Sentry é uma plataforma para rastrear, gerenciar e corrigir erros em aplicações.
+
+A configuração foi integrada ao projeto e requer a definição da variável de ambiente `{SENTRY_DSN}` em um arquivo `.env`, obtida a partir da sua conta em [Sentry](https://sentry.io/signup/).
+
+## <div id="deploy"> 🚀 Deploy </div>
+
+Para deploy da aplicação, utilizou-se o arquivo `Dockerfile` (não Dockerfile.dev) disponível no repositório em conjunto da plataforma [Render](https://render.com/) para hospedagem da `API da Lu Estilo`, e a plataforma [Supabase](https://supabase.com/) para o banco de dados, ambos em planos gratuitos.
+
+A API está disponível em https://lu-estilo.onrender.com/ e pode ser acessada livremente para testes e manipulações desejadas.
