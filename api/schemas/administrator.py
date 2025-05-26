@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from schemas.user import UserRead
 
 
@@ -6,8 +6,9 @@ class AdministratorRead(BaseModel):
     id: int = Field(description="Identificador do Administrador")
     user: UserRead = Field(description="Usuário referente ao Administrator")
 
-    model_config = {
-        "json_schema_extra": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
             "examples": [
                 {
                     "id": 1,
@@ -20,15 +21,16 @@ class AdministratorRead(BaseModel):
                     },
                 }
             ],
-        }
-    }
+        },
+    )
 
 
 class AdministratorCreate(BaseModel):
     user_id: int = Field(description="Identificador do usuário")
 
-    model_config = {
-        "json_schema_extra": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
             "example": {"user_id": 1},
-        }
-    }
+        },
+    )

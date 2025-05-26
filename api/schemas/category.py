@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class CategoryBase(BaseModel):
@@ -12,23 +12,26 @@ class CategoryBase(BaseModel):
 class CategoryRead(CategoryBase):
     id: int = Field(description="Identificador da categoria")
 
-    model_config = {
-        "json_schema_extra": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
             "example": {
                 "id": 1,
                 "name": "inverno",
                 "description": "roupas de inverno",
             }
-        }
-    }
+        },
+    )
 
 
 class CategoryCreate(CategoryBase):
-    model_config = {
-        "json_schema_extra": {
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
             "example": {
                 "name": "inverno",
                 "description": "roupas de inverno",
             }
-        }
-    }
+        },
+    )

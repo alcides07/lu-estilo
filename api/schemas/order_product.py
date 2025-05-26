@@ -2,7 +2,7 @@ from decimal import Decimal
 from typing import List
 from schemas.order import OrderRead
 from schemas.product import ProductRead
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ProductOfOrder(BaseModel):
@@ -14,14 +14,17 @@ class ProductOfOrder(BaseModel):
     )
     quantity: int = Field(description="Quantidade de unidades compradas do produto")
 
+    model_config = ConfigDict(from_attributes=True)
+
 
 class OrderProductRead(BaseModel):
 
     order: OrderRead = Field(description="Dados do pedido")
     products: List[ProductOfOrder] = Field(description="Produtos do pedido")
 
-    model_config = {
-        "json_schema_extra": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
             "example": {
                 "order": {
                     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -60,5 +63,5 @@ class OrderProductRead(BaseModel):
                     }
                 ],
             }
-        }
-    }
+        },
+    )

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from datetime import datetime
 
 
@@ -11,8 +11,9 @@ class UserRead(BaseModel):
         description="Data em que algum dado do usuário foi editado pela última vez"
     )
 
-    model_config = {
-        "json_schema_extra": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
             "example": {
                 "id": 1,
                 "name": "maria",
@@ -20,8 +21,8 @@ class UserRead(BaseModel):
                 "created_at": "2025-05-26T11:47:47.573Z",
                 "updated_at": "2025-05-26T11:47:47.573Z",
             }
-        }
-    }
+        },
+    )
 
 
 class UserCreate(BaseModel):
@@ -29,12 +30,13 @@ class UserCreate(BaseModel):
     password: str = Field(max_length=255, description="Senha do usuário")
     email: EmailStr = Field(max_length=255, description="E-mail do usuário")
 
-    model_config = {
-        "json_schema_extra": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
             "example": {
                 "name": "maria",
                 "password": "123456",
                 "email": "maria@email.com",
             }
-        }
-    }
+        },
+    )

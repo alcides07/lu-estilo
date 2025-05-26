@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from schemas.user import UserRead
 
 
@@ -7,8 +7,9 @@ class ClientRead(BaseModel):
     user: UserRead = Field(description="Usuário referente ao cliente")
     cpf: str = Field(max_length=11, description="CPF do cliente")
 
-    model_config = {
-        "json_schema_extra": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
             "example": {
                 "id": 1,
                 "user": {
@@ -20,20 +21,23 @@ class ClientRead(BaseModel):
                 },
                 "cpf": "11122233344",
             }
-        }
-    }
+        },
+    )
 
 
 class ClientCreate(BaseModel):
     user_id: int = Field(description="Identificador do usuário")
     cpf: str = Field(max_length=11, description="CPF do cliente")
 
-    model_config = {
-        "json_schema_extra": {"example": {"user_id": 1, "cpf": "11122233344"}}
-    }
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={"example": {"user_id": 1, "cpf": "11122233344"}},
+    )
 
 
 class ClientUpdate(BaseModel):
     cpf: str = Field(max_length=11, description="CPF do cliente")
 
-    model_config = {"json_schema_extra": {"example": {"cpf": "11122233344"}}}
+    model_config = ConfigDict(
+        from_attributes=True, json_schema_extra={"example": {"cpf": "11122233344"}}
+    )
