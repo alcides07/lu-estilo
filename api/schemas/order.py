@@ -4,7 +4,7 @@ from enum import Enum
 from typing import List, Optional
 from uuid import UUID
 from schemas.client import ClientRead
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 class OrderStatus(str, Enum):
@@ -23,7 +23,6 @@ class OrderStatus(str, Enum):
 
 
 class OrderRead(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
 
     id: UUID = Field(description="Identificador do Pedido")
     date: datetime = Field(description="Data hora de realização do pedido")
