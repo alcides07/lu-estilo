@@ -42,7 +42,7 @@ docker-compose -f docker-compose-dev.yml up --build
 
 #### Acesse a documentação da API (openAPI):
 
-> A API possui documentação de todas as suas rotas, incluindo exemplos e cenários de erro previstos, proporcionando suporte o maior suporte possível.
+> A API possui documentação de todas as suas rotas, incluindo exemplos e cenários de erro previstos, proporcionando o maior suporte possível.
 
 ```
 http://localhost:8000/docs/
@@ -64,9 +64,9 @@ http://localhost:8000/auth/register/
 
 #### Associe-se a um perfil e comece a usá-lo!
 
-> Associe-se a um cliente (POST /clients/) ou administrador (POST /administrators/)
-> Após se associar, por favor, faça logout e realize o login novamente para que suas permissões sejam atualizadas de acordo com o novo papel
-> É possível associar-se aos dois perfis ao mesmo tempo, de modo que você acumulará as permissões de ambos.
+> Associe-se como cliente (POST /clients/) ou administrador (POST /administrators/). Caso deseje, é possível vincular-se a ambos os perfis simultaneamente, acumulando suas respectivas permissões
+
+> Após a associação, para acessar todas as funcionalidades corretamente, realize logout e faça login novamente para que suas permissões sejam atualizadas conforme seu novo papel
 
 </details>
 
