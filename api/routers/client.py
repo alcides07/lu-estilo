@@ -54,8 +54,9 @@ async def read(
 async def create(
     client: ClientCreate,
     session: SessionDep,
-    _: User = Depends(owner_permission_or_admin(check_ower_user_permission)),
+    current_user: User = Depends(get_user_authenticated),
 ) -> ClientRead:
+    await check_ower_user_permission(client.user_id, current_user)
     service = ClientService(session)
     return service.create_client(client)
 
