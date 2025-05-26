@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     lifespan=lifespan,
-    title="API Lu Estilo - Sistema Comercial",
+    title="👨👔👘👩‍🦰 API Lu Estilo - Sistema Comercial",
     docs_url=None,
     redoc_url=None,
     description="""## 📌 Visão Geral    
