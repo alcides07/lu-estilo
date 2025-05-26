@@ -1,9 +1,11 @@
 import sentry_sdk
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+from sqladmin import Admin
 from routers import all_routers
 from database.config import Base, engine
 from decouple import config
+from admin import all_admins
 
 SENTRY_DSN = config("SENTRY_DSN", default=None)
 
@@ -40,6 +42,9 @@ app = FastAPI(
     """,
 )
 
+admin = Admin(app, engine)
+for adm in all_admins:
+    admin.add_view(adm)
 
 for router in all_routers:
     app.include_router(router)
