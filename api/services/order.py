@@ -113,7 +113,7 @@ class OrderService:
             self.session.add(new_order)
             self.session.flush()
 
-            order_products = []
+            order_products: List[OrderProduct] = []
             for product_order in order.products:
                 product = products_dict[product_order.id]
 
@@ -140,9 +140,48 @@ class OrderService:
             self.session.commit()
             self.session.refresh(new_order)
 
+            order_data = {
+                "id": new_order.id,
+                "date": new_order.date,
+                "status": new_order.status,
+                "price_total": new_order.price_total,
+                "client": (
+                    {
+                        "id": new_order.client.id,
+                        "cpf": new_order.client.cpf,
+                        "user": {
+                            "id": new_order.client.user.id,
+                            "name": new_order.client.user.name,
+                            "email": new_order.client.user.email,
+                            "created_at": new_order.client.user.created_at,
+                            "updated_at": new_order.client.user.updated_at,
+                        },
+                    }
+                    if new_order.client
+                    else None
+                ),
+            }
+
+            products_of_order: List[ProductOfOrder] = [
+                ProductOfOrder(
+                    product=ProductRead(
+                        id=op.product.id,
+                        description=op.product.description,
+                        value=op.product.value,
+                        bar_code=op.product.bar_code,
+                        stock=op.product.stock,
+                        expiration_date=op.product.expiration_date,
+                        category=op.product.category,
+                    ),
+                    unit_price=op.unit_price,
+                    quantity=op.quantity,
+                )
+                for op in order_products
+            ]
+
             order_response = OrderProductRead(
-                order=OrderRead.model_validate(new_order),
-                products=order_products,
+                order=OrderRead.model_validate(order_data),
+                products=products_of_order,
             )
 
             return order_response
