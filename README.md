@@ -5,7 +5,8 @@
       <a href="#configuracao-ambiente">Configuração do ambiente</a> •
       <a href="#testes">Testes</a> •
       <a href="#sentry">Ferramenta Sentry</a> • 
-      <a href="#deploy">Deploy</a> 
+      <a href="#deploy">Deploy</a> •
+      <a href="#admin">Admin</a> 
     </div>
   </section>
 
@@ -114,3 +115,7 @@ A configuração foi integrada ao projeto e requer a definição da variável de
 Para deploy da aplicação, utilizou-se o arquivo `Dockerfile` (não Dockerfile.dev) disponível no repositório em conjunto da plataforma [Render](https://render.com/) para hospedagem da `API da Lu Estilo`, e a plataforma [Supabase](https://supabase.com/) para o banco de dados, ambos em planos gratuitos.
 
 A API está disponível em https://lu-estilo.onrender.com/ e pode ser acessada livremente para testes e manipulações desejadas.
+
+## <div id="admin"> 🔓 Admin </div>
+
+A interface de administração em `http://localhost:8000/admin/` está acessível sem necessidade de autenticação, permitindo a visualização rápida de determinados itens. No entanto, alguns modelos aninhados podem não estar totalmente configurados e apresentar inconsistências.
