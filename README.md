@@ -36,6 +36,16 @@ git clone https://github.com/alcides07/lu-estilo.git
 cd lu-estilo/api
 ```
 
+#### Crie um arquivo .env e cole o conteúdo abaixo:
+
+```
+SECRET_KEY=unsafe_secret
+DATABASE_URL=postgresql://lu:123@db:5432/lu-db
+POSTGRES_USER=lu
+POSTGRES_PASSWORD=123   
+POSTGRES_DB=lu-db
+```
+
 #### Construa e execute a aplicação:
 
 ```
