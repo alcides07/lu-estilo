@@ -10,10 +10,28 @@ class CategoryBase(BaseModel):
 
 
 class CategoryRead(CategoryBase):
-    model_config = ConfigDict(from_attributes=True)
-
     id: int = Field(description="Identificador da categoria")
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
+            "example": {
+                "id": 1,
+                "name": "inverno",
+                "description": "roupas de inverno",
+            }
+        },
+    )
 
 
 class CategoryCreate(CategoryBase):
-    pass
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
+            "example": {
+                "name": "inverno",
+                "description": "roupas de inverno",
+            }
+        },
+    )

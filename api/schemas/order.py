@@ -23,8 +23,6 @@ class OrderStatus(str, Enum):
 
 
 class OrderRead(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
     id: UUID = Field(description="Identificador do Pedido")
     date: datetime = Field(description="Data hora de realização do pedido")
     status: OrderStatus = Field(description="Status do pedido")
@@ -33,10 +31,14 @@ class OrderRead(BaseModel):
     )
     price_total: Decimal = Field(description="Valor total do pedido")
 
+    model_config = ConfigDict(from_attributes=True)
+
 
 class ProductOrder(BaseModel):
     id: int = Field(description="Identificador do produto")
     quantity: int = Field(description="Quantidade desejada do produto", gt=0)
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class OrderCreate(BaseModel):

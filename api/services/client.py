@@ -15,7 +15,9 @@ class ClientService:
         self.session = session
 
     async def read_client(self, client_id: int):
-        client = get_object_or_404(self.session, Client, client_id)
+        client = get_object_or_404(
+            self.session, Client, client_id, detail="Cliente não encontrado"
+        )
         return client
 
     def list_clients(self, pagination: PaginationSchema, filters: ClientFilter):

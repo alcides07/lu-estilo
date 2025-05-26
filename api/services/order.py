@@ -113,7 +113,7 @@ class OrderService:
             self.session.add(new_order)
             self.session.flush()
 
-            order_products = []
+            order_products: List[OrderProduct] = []
             for product_order in order.products:
                 product = products_dict[product_order.id]
 
@@ -140,9 +140,18 @@ class OrderService:
             self.session.commit()
             self.session.refresh(new_order)
 
+            products_of_order: List[ProductOfOrder] = [
+                ProductOfOrder(
+                    product=op.product,
+                    unit_price=op.unit_price,
+                    quantity=op.quantity,
+                )
+                for op in order_products
+            ]
+
             order_response = OrderProductRead(
                 order=OrderRead.model_validate(new_order),
-                products=order_products,
+                products=products_of_order,
             )
 
             return order_response

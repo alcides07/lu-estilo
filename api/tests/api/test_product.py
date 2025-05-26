@@ -77,7 +77,7 @@ def perform_update_product(
             assert product_read.category.id == new_data.category_id
 
 
-def perform_read_product(agent: TestClient, expected_status, product_id, db_session):
+def perform_read_product(agent: TestClient, expected_status, product_id):
     response = agent.get(f"/products/{product_id}/")
     assert response.status_code == expected_status
 
@@ -113,7 +113,6 @@ def test_read_product(request, product, user_type, expected_status):
         user_fixture["agent"],
         expected_status,
         product.id,
-        user_fixture["session"],
     )
 
 

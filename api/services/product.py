@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
+from models.order_product import OrderProduct
 from filters.product import ProductFilter
 from models.product import Product
 from orm.utils.get_object_or_404 import get_object_or_404
@@ -36,7 +37,9 @@ class ProductService:
         return new_stock
 
     async def read_product(self, id):
-        product = get_object_or_404(self.session, Product, id)
+        product = get_object_or_404(
+            self.session, Product, id, detail="Produto não encontrado"
+        )
         return product
 
     def list_products(self, pagination: PaginationSchema, filters: ProductFilter):
@@ -110,6 +113,16 @@ class ProductService:
         product = get_object_or_404(self.session, Product, id)
 
         try:
+            stmt = select(OrderProduct).where(OrderProduct.product_id == id)
+            result = self.session.execute(stmt)
+            has_orders = result.scalars().first() is not None
+
+            if has_orders:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Não é possível excluir o produto pois ele está vinculado a pedidos",
+                )
+
             self.session.delete(product)
             self.session.commit()
 

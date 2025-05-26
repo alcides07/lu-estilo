@@ -42,6 +42,19 @@ def perform_create_order(
         if user_type == "client":
             assert order_product_read.order.client.id == role_id
 
+    return response
+
+
+def perform_read_order(agent: TestClient, expected_status: int, order_id):
+    response = agent.get(f"/orders/{order_id}/")
+    assert response.status_code == expected_status
+
+    response_data = response.json()["data"]
+    order_read = OrderProductRead.model_validate(response_data)
+
+    if expected_status == status.HTTP_200_OK:
+        assert order_read.order.id is not None
+
 
 @pytest.mark.parametrize(
     "user_type,expected_status",
@@ -56,13 +69,15 @@ def test_list_order(request, user_type, expected_status):
 
 
 @pytest.mark.parametrize(
-    "user_type,expected_status",
+    "user_type,expected_status_create,expected_status_read",
     [
-        ("client", status.HTTP_200_OK),
-        ("administrator", status.HTTP_200_OK),
+        ("client", status.HTTP_201_CREATED, status.HTTP_200_OK),
+        ("administrator", status.HTTP_403_FORBIDDEN, status.HTTP_403_FORBIDDEN),
     ],
 )
-def test_read_my_order(request, user_type, expected_status, db_session):
+def test_read_my_order(
+    request, user_type, expected_status_create, expected_status_read, db_session
+):
     user_fixture = request.getfixturevalue(user_type)
 
     product_1 = ProductFactory(session=db_session)
@@ -71,7 +86,17 @@ def test_read_my_order(request, user_type, expected_status, db_session):
 
     order_data = OrderCreate(products=products)
 
-    perform_create_order(user_fixture, user_type, order_data, expected_status)
+    response = perform_create_order(
+        user_fixture, user_type, order_data, expected_status_create
+    )
+    if response.status_code == status.HTTP_201_CREATED:
+        response_data = response.json()
+        order_id = response_data["order"]["id"]
+
+        print("oi²", response_data["order"]["client"]["id"])
+        print("oi²", user_fixture["role"].id)
+
+        perform_read_order(user_fixture["agent"], expected_status_read, order_id)
 
 
 @pytest.mark.parametrize(
