@@ -47,7 +47,7 @@ async def list(
     "/",
     status_code=201,
     dependencies=[Depends(is_administrator), Depends(get_user_authenticated)],
-    summary="Lista todas as categorias cadastradas",
+    summary="Cadastra uma nova categoria",
     description="""
     ## 📝 Cadastra uma nova categoria
     Endpoint para cadastrar uma nova categoria no sistema.
