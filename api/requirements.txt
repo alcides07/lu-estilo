@@ -9,3 +9,4 @@ PyJWT==2.10.1
 psycopg2-binary==2.9.10
 gunicorn==23.0.0
 uvicorn==0.34.2
+sentry-sdk[fastapi]==2.29.1
