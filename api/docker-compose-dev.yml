@@ -1,5 +1,6 @@
 services:
   api:
+    image: lu-api-dev
     build:
       context: .
       dockerfile: Dockerfile.dev

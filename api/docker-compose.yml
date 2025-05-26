@@ -1,5 +1,6 @@
 services:
   api:
+    image: lu-api
     build: .
     restart: always
     container_name: lu-api
