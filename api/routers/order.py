@@ -28,6 +28,23 @@ router = APIRouter(
 @router.get(
     "/",
     dependencies=[Depends(is_administrator)],
+    summary="Lista todos os pedidos cadastrados",
+    description="""
+    ## 📝 Listagem de pedidos
+    Endpoint para consulta de todos os pedidos do sistema com filtragem e paginação dos dados.
+    
+    ### 🔐 Permissões Necessárias
+    - Somente **administradores** podem ver todos os pedidos
+
+    ### 🔎 Parâmetros de Filtro Disponíveis
+    - limit       (int): Indica a quantidade de pedidos que deseja visualizar
+    - offset      (int): Indica a partir de qual pedido da lista deseja visualizar
+    - date__lte   (date): Pedidos iguais ou anteriores a uma data
+    - date__gte   (date): Pedidos iguais ou posteriores a uma data
+    - category_id (int):  Pedidos que possuem produtos da categoria informada
+    - status      (OrderStatus): Filtra pedido pelo seu status
+    - client_id   (int): Filtra pedidos de uma cliente específico
+    """,
 )
 async def list(
     session: SessionDep,
@@ -43,6 +60,17 @@ async def list(
 
 @router.get(
     "/{id}/",
+    summary="Visualiza os dados de um pedido específico",
+    description="""
+    ## 📝 Visualiza os dados de um pedido
+    Endpoint para visualizar os dados de um pedido, incluindo a visualização dos produtos.
+    
+    ### 🔐 Permissões Necessárias
+    - Apenas o cliente dono do pedido pode visualizar seu próprio pedido.
+    
+    ### 🔙 Retorno
+    - São retornados os dados do pedido em si, assim como dos produtos contidos nele. Consulte a seção de exemplos de respostas abaixo para mais detalhes.
+    """,
 )
 async def read(
     session: SessionDep,
@@ -55,7 +83,52 @@ async def read(
     return ResponseUnit(data=order)
 
 
-@router.post("/", status_code=201, dependencies=[Depends(is_client)])
+@router.post(
+    "/",
+    status_code=201,
+    dependencies=[Depends(is_client)],
+    summary="Cadastra um novo pedido",
+    description="""
+    ## 📝 Cadastra um novo pedido
+    Endpoint para cadastrar um novo pedido no sistema.
+    
+    ### 🔐 Permissões Necessárias
+    - Apenas **clientes** podem cadastrar pedidos, para si próprios.
+
+    ### ⬇️ Campos do formulário
+    - products       (OBRIGATÓRIO): Lista de produtos
+        - id         (OBRIGATÓRIO): Identificador do produto
+        - quantity   (OBRIGATÓRIO): Quantidade desejada do produto
+    
+    ### 📑 Regras de negócio
+        - Um pedido só é aceito se todos os produtos possuírem estoque suficiente para a compra.
+    
+    ### 🔙 Retorno
+    - São retornados os dados do pedido cadastrado, juntamente com os produtos contidos nele.
+    """,
+    responses={
+        404: {
+            "description": "Produto(s) não encontrado(s) com identificador(es) informado(s)",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Alguns produtos não foram encontrados: x, y, z"
+                    }
+                }
+            },
+        },
+        400: {
+            "description": "Estoque insuficiente de produto",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "O produto {X} possui {Y} unidades em estoque"
+                    }
+                }
+            },
+        },
+    },
+)
 async def create(
     order: OrderCreate,
     session: SessionDep,
@@ -69,6 +142,43 @@ async def create(
 @router.put(
     "/{id}/",
     dependencies=[Depends(is_administrator)],
+    summary="Edita os dados de um pedido específico",
+    description="""
+    ## 📝 Edita os dados de um pedido
+    Endpoint para editar os dados de um pedido, atualizando-os na base de dados.
+    
+    ### 🔐 Permissões Necessárias
+    - Apenas **administradores** podem editar um pedido.
+    
+    ### ⬇️ Campos do formulário
+    - status (OBRIGATÓRIO): Status do produto.
+
+    ### 💬 Observações:
+    - A edição do pedido ocorre apenas no que diz respeito a atualização do status do pedido, que são eles:
+        "Recebido"
+        "Aguardando pagamento"
+        "Pagamento aprovado"
+        "Preparando"
+        "Enviado"
+        "Saiu para entrega"
+        "Entregue"
+        "Cancelado"
+        "Devolução solicitada"
+        "Reembolso solicitado"
+        "Devolvido"
+        "Reembolsado"
+
+    ### 🔙 Retorno
+    - São retornados os dados do pedido após edição.
+    """,
+    responses={
+        404: {
+            "description": "Pedido não encontrado com identificador informado",
+            "content": {
+                "application/json": {"example": {"detail": "Pedido não encontrado"}}
+            },
+        },
+    },
 )
 async def update(
     order: OrderUpdate,
@@ -84,6 +194,17 @@ async def update(
     "/{id}/",
     status_code=204,
     dependencies=[Depends(is_administrator)],
+    summary="Deleta um pedido específico",
+    description="""
+    ## 📝 Deleta um pedido específico
+    Endpoint para excluir um pedido, removendo as linhas da tabela intermediária entre produto e pedido.
+    
+    ### 🔐 Permissões Necessárias
+    - Apenas **administradores** podem excluir pedidos.
+
+    ### 🔙 Retorno
+    - Nenhum conteúdo é retornado, apenas o código HTTP 204 indicando um status de sucesso, mas sem conteúdo na resposta.
+    """,
 )
 async def delete(
     session: SessionDep,
