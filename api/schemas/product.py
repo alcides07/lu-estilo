@@ -68,7 +68,7 @@ class ProductCreate(ProductBase):
         from_attributes=True,
         json_schema_extra={
             "example": {
-                "description": "Frango congelado",
+                "description": "Calça Estilosa",
                 "value": 16.99,
                 "bar_code": "xxxxxxxx",
                 "stock": 32,
