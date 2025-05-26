@@ -27,20 +27,14 @@ router = APIRouter(
     Endpoint para consulta de todos os usuários administradores do sistema com filtragem e paginação de dados.
     
     ### 🔐 Permissões Necessárias
-    - Exclusivo para usuários com perfil de administrador
+    - Exclusivo para usuários com perfil de administrador **autenticados**
 
     ### 🔎 Parâmetros de Filtro Disponíveis
-    - **user__name** (string): Filtra administradores por correspondência parcial do nome
+    - limit      (int): Indica a quantidade de administradores que deseja visualizar
+    - offset     (int): Indica a partir de qual administrador da lista deseja visualizar
+    - user__name (str): Filtra administradores por correspondência parcial do nome
     """,
     responses={
-        200: {
-            "description": "Lista de administradores retornada com sucesso",
-            "content": {
-                "application/json": {
-                    "example": AdministratorRead.Config.schema_extra["example_list"]
-                }
-            },
-        },
         401: {
             "description": "Não autenticado",
             "content": {
@@ -81,18 +75,20 @@ async def list(
     - Ao se colocar como administrador, deve-se deslogar e realizar um novo login via (POST /auth/login/) para que as permissões de administrador entrem em vigor.
     """,
     responses={
-        201: {
-            "description": "Objeto de administrador atribuído com sucesso",
+        400: {
+            "description": "Administrador já existente com usuário",
             "content": {
                 "application/json": {
-                    "example": AdministratorCreate.Config.schema_extra["example_out"]
-                }
+                    "example": {
+                        "detail": "Já existe um administrador associado a esse usuário"
+                    }
+                },
             },
         },
         401: {
             "description": "Não autenticado",
             "content": {
-                "application/json": {"example": {"detail": "Not authenticated"}}
+                "application/json": {"example": {"detail": "Not authenticated"}},
             },
         },
         403: {
@@ -104,14 +100,7 @@ async def list(
 async def create(
     session: SessionDep,
     current_user: User = Depends(get_user_authenticated),
-    administrator: AdministratorCreate = Body(
-        openapi_examples={
-            "exemplo_1": {
-                "summary": "Envio de {user_id}",
-                "value": AdministratorCreate.Config.schema_extra["exampĺe_in"],
-            },
-        },
-    ),
+    administrator: AdministratorCreate = Body(),
 ):
     await check_ower_user_permission(administrator.user_id, current_user)
 
