@@ -14,6 +14,15 @@ class LoginOut(BaseModel):
     access_token: str = Field(description="Token de acesso")
     refresh_token: str = Field(description="Token de atualização")
 
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJzdWIiOiJhZG1pbiIsInJvbGVzIjpbImNsaWVudCIsImFkbWluaXN0cmF0b3IiXSwiZXhwIjoxNzQ4MjY0Njc5LCJ0b2tlbl90eXBlIjoiYWNjZXNzIn0.qMKY14EAUkQLHTpe_NEePLMppGmjTyLWf4m4uSPqUZw",
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJzdWIiOiJhZG1pbiIsInJvbGVzIjpbImNsaWVudCIsImFkbWluaXN0cmF0b3IiXSwiZXhwIjoxNzQ4MzUwNzc5LCJ0b2tlbl90eXBlIjoicmVmcmVzaCJ9.M4_bSlr2kHex0g3HRCHVElMcIjP-DfzEhTEmwmjlbCo",
+            },
+        }
+    }
+
 
 class TokenRefreshIn(BaseModel):
     """Dados que são submetidos para obter um novo token de acesso"""
@@ -25,6 +34,14 @@ class TokenRefreshOut(BaseModel):
     """Dados que são retornados após solicitação de refresh token"""
 
     access: str = Field(description="Novo token de acesso")
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJzdWIiOiJhZG1pbiIsInJvbGVzIjpbImNsaWVudCIsImFkbWluaXN0cmF0b3IiXSwiZXhwIjoxNzQ4MjY0Njc5LCJ0b2tlbl90eXBlIjoiYWNjZXNzIn0.qMKY14EAUkQLHTpe_NEePLMppGmjTyLWf4m4uSPqUZw",
+            },
+        }
+    }
 
 
 class TokenStorage(BaseModel):
