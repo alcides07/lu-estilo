@@ -56,7 +56,12 @@ async def refresh_access_token(
 ) -> TokenRefreshOut:
     user_data = await verify_token(refresh, TokenType.REFRESH)
 
-    new_access_token = await create_access_token(
-        data={"sub": user_data.sub, "user_id": user_data.user_id}
+    data_token = TokenDataToSubmitToStorage(
+        sub=user_data.sub,
+        user_id=user_data.user_id,
+        roles=user_data.roles,
     )
+
+    new_access_token = await create_access_token(data_token)
+
     return TokenRefreshOut(access=new_access_token)
