@@ -9,7 +9,7 @@ def overridden_swagger():
     return get_swagger_ui_html(
         openapi_url="/openapi.json",
         title="API Lu Estilo",
-        swagger_favicon_url="https://cdn-icons-png.flaticon.com/512/2051/2051493.png",
+        swagger_favicon_url="https://cdn3.iconfinder.com/data/icons/fashion-flat-icons-vol-1/256/02-512.png",
         swagger_ui_parameters={
             "syntaxHighlight": {"theme": "nord"},
             "filter": True,
@@ -25,5 +25,5 @@ def overridden_redoc():
     return get_redoc_html(
         openapi_url="/openapi.json",
         title="API Lu Estilo",
-        redoc_favicon_url="https://cdn-icons-png.flaticon.com/512/2051/2051493.png",
+        redoc_favicon_url="https://cdn3.iconfinder.com/data/icons/fashion-flat-icons-vol-1/256/02-512.png",
     )
